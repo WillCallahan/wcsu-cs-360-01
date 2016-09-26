@@ -1,0 +1,13 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="wcsu-cs-360-01:war exploded">
+    <output-path>$PROJECT_DIR$/out/artifacts/wcsu_cs_360_01_war_exploded.war</output-path>
+    <root id="root">
+      <element id="javaee-facet-resources" facet="wcsu-cs-360-01/web/Web" />
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="wcsu-cs-360-01" />
+        </element>
+      </element>
+    </root>
+  </artifact>
+</component>
