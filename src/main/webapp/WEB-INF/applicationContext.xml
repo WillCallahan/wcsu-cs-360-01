@@ -34,7 +34,7 @@
 	<bean class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor"/>
 
 	<bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
-		<property name="persistenceUnitName" value="HRRSDS"/>
+		<property name="persistenceUnitName" value="DatingDS"/>
 		<property name="jpaVendorAdapter">
 			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
 			</bean>
@@ -50,7 +50,7 @@
 	<bean class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor">
 		<property name="persistenceUnits">
 			<map>
-				<entry key="HRRSDS" value="HRRSDS"/>
+				<entry key="DatingDS" value="DatingDS"/>
 			</map>
 		</property>
 		<property name="defaultPersistenceUnitName" value="InventoryDS"/>

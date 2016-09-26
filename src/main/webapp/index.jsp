@@ -1,16 +1,6 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: William Callahan
-  Date: 9/26/2016
-  Time: 12:21 AM
-  To change this template use File | Settings | File Templates.
---%>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<!DOCTYPE html>
 <html>
   <head>
-    <title>$Title$</title>
+    <meta http-equiv="refresh" content="0; URL='<%=request.getContextPath()%>/index'" />
   </head>
-  <body>
-  $END$
-  </body>
 </html>
