@@ -1,0 +1,3 @@
+Manifest-Version: 1.0
+Main-Class: edu.wcsu.cs360.battleship.server.controller.ServerMainController
+Created-By: William Callahan, Justin, Abdul (WCSU 360)

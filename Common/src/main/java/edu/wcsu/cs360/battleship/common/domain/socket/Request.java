@@ -7,14 +7,21 @@ public class Request {
 
 	private String contentType;
 
-	private int statusCode;
+	private String target;
 
-	private String message;
+	private String method;
 
 	private Object body;
 
 	public Request() {
 
+	}
+
+	public Request(String contentType, String target, String method, Object body) {
+		this.contentType = contentType;
+		this.target = target;
+		this.method = method;
+		this.body = body;
 	}
 
 	public String getContentType() {
@@ -25,27 +32,27 @@ public class Request {
 		this.contentType = contentType;
 	}
 
-	public int getStatusCode() {
-		return statusCode;
+	public String getTarget() {
+		return target;
 	}
 
-	public void setStatusCode(int statusCode) {
-		this.statusCode = statusCode;
+	public void setTarget(String target) {
+		this.target = target;
 	}
 
-	public String getMessage() {
-		return message;
+	public String getMethod() {
+		return method;
 	}
 
-	public void setMessage(String message) {
-		this.message = message;
+	public void setMethod(String method) {
+		this.method = method;
 	}
 
 	public Object getBody() {
 		return body;
 	}
 
-	public void setBody(String body) {
+	public void setBody(Object body) {
 		this.body = body;
 	}
 }

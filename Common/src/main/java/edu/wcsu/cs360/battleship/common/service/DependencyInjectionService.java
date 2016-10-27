@@ -29,16 +29,21 @@ public class DependencyInjectionService {
 	public void injectDependencies(Object object) throws IllegalArgumentException, IllegalAccessException {
 		for (Class<? extends Annotation> annotation : injectionAnnotationList) {
 			for (Field field : getFieldIterableWithAnnotation(annotation, object.getClass())) {
-				if (dependencyMap.containsKey(getDependencyKey(field)))
-					field.set(field, dependencyMap.get(getDependencyKey(field)));
+				field.setAccessible(true);
+				if (dependencyMap.containsKey(getAnnotationDependencyKey(field)))
+					field.set(object, dependencyMap.get(getAnnotationDependencyKey(field)));
 				else
-					field.set(field, dependencyMap.get(Character.toLowerCase(field.getClass().getName().charAt(0)) + field.getClass().getName().substring(1)));
+					field.set(object, dependencyMap.get(Character.toLowerCase(field.getType().getSimpleName().charAt(0)) + field.getType().getSimpleName().substring(1)));
 			}
 		}
 	}
 
 	public void registerDependency(Object object) {
-		dependencyMap.put(Character.toLowerCase(object.getClass().getName().charAt(0)) + object.getClass().getName().substring(1), object);
+		dependencyMap.put(Character.toLowerCase(object.getClass().getSimpleName().charAt(0)) + object.getClass().getSimpleName().substring(1), object);
+	}
+
+	public <T> void registerDependency(Class<T> c, T object) {
+		dependencyMap.put(Character.toLowerCase(c.getSimpleName().charAt(0)) + c.getSimpleName().substring(1), object);
 	}
 
 	public void registerDependency(String dependencyName, Object object) {
@@ -47,24 +52,24 @@ public class DependencyInjectionService {
 
 	private Iterable<Field> getFieldIterableWithAnnotation(Class<? extends Annotation> annotation, Class c) {
 		List<Field> fieldList = new ArrayList<>();
-		for (Field field : Arrays.asList(c.getFields())) {
+		for (Field field : Arrays.asList(c.getDeclaredFields())) {
 			for (Annotation fieldAnnotation : field.getAnnotations()) {
-				if (fieldAnnotation.getClass().equals(annotation))
+				if (fieldAnnotation.annotationType().equals(annotation))
 					fieldList.add(field);
 			}
 		}
 		return fieldList;
 	}
 
-	private String getDependencyKey(Field field) {
+	private String getAnnotationDependencyKey(Field field) {
 		try {
 			Inject inject = field.getAnnotation(Inject.class);
 			if (inject.value().length() > 0)
 				return inject.value();
 			else
-				return field.getAnnotation(Inject.class).value();
+				return field.getName();
 		} catch (NullPointerException e) {
-			return field.getAnnotation(Inject.class).value();
+			return field.getName();
 		}
 	}
 

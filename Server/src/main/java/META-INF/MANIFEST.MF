@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Main-Class: edu.wcsu.cs360.battleship.server.controller.ServerMainCont
+ roller
+
