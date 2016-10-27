@@ -2,13 +2,13 @@
   <library name="org.hibernate.javax.persistence:hibernate-jpa-2.1-api:1.0.0.Final" type="repository">
     <properties maven-id="org.hibernate.javax.persistence:hibernate-jpa-2.1-api:1.0.0.Final" />
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/lib/hibernate-jpa-2.1-api-1.0.0.Final.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Common/lib/hibernate-jpa-2.1-api-1.0.0.Final.jar!/" />
     </CLASSES>
     <JAVADOC>
-      <root url="jar://$PROJECT_DIR$/lib/hibernate-jpa-2.1-api-1.0.0.Final-javadoc.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Common/lib/hibernate-jpa-2.1-api-1.0.0.Final-javadoc.jar!/" />
     </JAVADOC>
     <SOURCES>
-      <root url="jar://$PROJECT_DIR$/lib/hibernate-jpa-2.1-api-1.0.0.Final-sources.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Common/lib/hibernate-jpa-2.1-api-1.0.0.Final-sources.jar!/" />
     </SOURCES>
   </library>
 </component>
