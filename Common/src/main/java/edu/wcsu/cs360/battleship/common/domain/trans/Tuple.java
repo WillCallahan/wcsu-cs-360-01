@@ -1,4 +1,4 @@
-package edu.wcsu.cs360.battleship.common.domain.dmo.local;
+package edu.wcsu.cs360.battleship.common.domain.trans;
 
 public class Tuple {
 	private int x;
