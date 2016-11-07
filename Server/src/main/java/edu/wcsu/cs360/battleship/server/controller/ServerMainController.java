@@ -6,11 +6,15 @@ import edu.wcsu.cs360.battleship.common.repository.UserRepository;
 import edu.wcsu.cs360.battleship.common.service.DependencyInjectionService;
 import edu.wcsu.cs360.battleship.common.service.DispatcherService;
 import edu.wcsu.cs360.battleship.common.service.IDispatcher;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 
 public class ServerMainController {
 
 	private IDispatcher iDispatcher;
 	private DependencyInjectionService dependencyInjectionService;
+	private Log log = LogFactory.getLog(this.getClass());
 
 	public ServerMainController() {
 		dependencyInjectionService = new DependencyInjectionService();
@@ -24,11 +28,13 @@ public class ServerMainController {
 	}
 
 	public void run() {
+		log.info("Starting application!");
 		Request request = new Request();
 		request.setContentType("application/json");
 		request.setBody("Sample");
 		request.setTarget("gameController.getTest");
 		iDispatcher.dispatch(request);
+		log.info("Ending application!");
 	}
 
 }
