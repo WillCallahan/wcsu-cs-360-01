@@ -1,21 +1,20 @@
 package edu.wcsu.cs360.battleship.common.domain.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.io.Serializable;
 
 /**
  * Stores information related to a specific User
  */
 @Entity
-@Table(name = "USER")
+@Table(name = "USER_PROFILE")
 public class User implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	@Column(name = "USER_ID", unique = true)
+	@GeneratedValue(generator = "USER_PROFILE_GEN", strategy = GenerationType.AUTO)
+	@SequenceGenerator(sequenceName = "USER_PROFILE_SEQ", initialValue = 1, name = "USER_PROFILE_GEN")
 	private long userId;
 
 	@Column(name = "FIRST_NAME", length = 255)
