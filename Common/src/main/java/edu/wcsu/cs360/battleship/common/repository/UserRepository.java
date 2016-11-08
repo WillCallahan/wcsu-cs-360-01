@@ -2,10 +2,19 @@ package edu.wcsu.cs360.battleship.common.repository;
 
 import edu.wcsu.cs360.battleship.common.domain.entity.User;
 
+import javax.persistence.EntityManager;
+
 /**
  * Implementation of a {@link IUserRepository}
  */
+@SuppressWarnings("unchecked")
 public class UserRepository implements IUserRepository {
+
+	private EntityManager entityManager;
+
+	public UserRepository(EntityManager entityManager) {
+		this.entityManager = entityManager;
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -20,7 +29,7 @@ public class UserRepository implements IUserRepository {
 	 */
 	@Override
 	public Iterable<User> findAll() {
-		return null;
+		return entityManager.createQuery("SELECT u FROM User u").getResultList();
 	}
 
 	/**

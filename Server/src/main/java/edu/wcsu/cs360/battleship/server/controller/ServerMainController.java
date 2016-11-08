@@ -10,6 +10,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.Logger;
 
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+
 public class ServerMainController {
 
 	private IDispatcher iDispatcher;
@@ -17,8 +20,9 @@ public class ServerMainController {
 	private Log log = LogFactory.getLog(this.getClass());
 
 	public ServerMainController() {
+		EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("BattleshipJPA");
 		dependencyInjectionService = new DependencyInjectionService();
-		dependencyInjectionService.registerDependency(IUserRepository.class, new UserRepository());
+		dependencyInjectionService.registerDependency(IUserRepository.class, new UserRepository(entityManagerFactory.createEntityManager()));
 		iDispatcher = new DispatcherService(dependencyInjectionService, GameController.class);
 	}
 
