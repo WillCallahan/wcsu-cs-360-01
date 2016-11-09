@@ -6,9 +6,9 @@ import edu.wcsu.cs360.battleship.common.repository.UserRepository;
 import edu.wcsu.cs360.battleship.common.service.DependencyInjectionService;
 import edu.wcsu.cs360.battleship.common.service.DispatcherService;
 import edu.wcsu.cs360.battleship.common.service.IDispatcher;
+import edu.wcsu.cs360.battleship.common.service.PropertyFileService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.log4j.Logger;
 
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -20,7 +20,8 @@ public class ServerMainController {
 	private Log log = LogFactory.getLog(this.getClass());
 
 	public ServerMainController() {
-		EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("BattleshipJPA");
+		PropertyFileService propertyFileService = new PropertyFileService("database.properties");
+		EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory(propertyFileService.getProperty("jpa.persistence.unit.name").toString());
 		dependencyInjectionService = new DependencyInjectionService();
 		dependencyInjectionService.registerDependency(IUserRepository.class, new UserRepository(entityManagerFactory.createEntityManager()));
 		iDispatcher = new DispatcherService(dependencyInjectionService, GameController.class);

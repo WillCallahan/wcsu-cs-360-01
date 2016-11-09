@@ -33,6 +33,7 @@
       <element id="library" level="project" name="commons-logging:commons-logging:1.2" />
       <element id="library" level="project" name="ojdbc6" />
       <element id="jpa-descriptors" facet="Common/jpa/JPA" />
+      <element id="library" level="project" name="org.hibernate:hibernate-c3p0:5.2.4.Final" />
     </root>
   </artifact>
 </component>
