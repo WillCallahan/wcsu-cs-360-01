@@ -11,6 +11,8 @@ import org.junit.Test;
 
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by William Callahan on 11/7/2016.
@@ -20,6 +22,16 @@ public class UserRepositoryTest {
 	private Log log = LogFactory.getLog(this.getClass());
 	private IUserRepository iUserRepository;
 	private EntityManagerFactory entityManagerFactory;
+
+	private User user;
+
+	{
+		user = new User();
+		user.setFirstName("William");
+		user.setMiddleName("Gregory");
+		user.setLastName("Callahan");
+		user.setEmail("Test@test.com");
+	}
 
 	@Before
 	public void setUp() throws Exception {
@@ -35,7 +47,9 @@ public class UserRepositoryTest {
 
 	@Test
 	public void findOne() throws Exception {
-
+		user = iUserRepository.save(user);
+		User newUser = iUserRepository.findOne(user.getUserId());
+		Assert.assertNotNull(newUser);
 	}
 
 	@Test
@@ -46,39 +60,28 @@ public class UserRepositoryTest {
 
 	@Test
 	public void count() throws Exception {
-
+		Long count = iUserRepository.count();
+		Assert.assertTrue(count == 0L);
 	}
 
 	@Test
 	public void save() throws Exception {
-		User user = new User();
-		user.setFirstName("William");
-		user.setMiddleName("Gregory");
-		user.setLastName("Callahan");
-		user.setEmail("Test@test.com");
-
 		User newUser = iUserRepository.save(user);
-
 		user.setUserId(newUser.getUserId());
-
 		Assert.assertTrue(user.equals(newUser));
 	}
 
 	@Test
 	public void save1() throws Exception {
-
+		List<User> userList = new ArrayList<>();
+		userList.add(user);
+		Iterable<User> userIterable = iUserRepository.save(userList);
+		Assert.assertNotNull(userIterable);
 	}
 
 	@Test
 	public void delete() throws Exception {
-		User user = new User();
-		user.setFirstName("William");
-		user.setMiddleName("Gregory");
-		user.setLastName("Callahan");
-		user.setEmail("Test@test.com");
-
 		User newUser = iUserRepository.save(user);
-
 		Assert.assertNotNull(iUserRepository.findOne(newUser.getUserId()));
 		iUserRepository.delete(newUser.getUserId());
 		Assert.assertNull(iUserRepository.findOne(newUser.getUserId()));
@@ -86,7 +89,10 @@ public class UserRepositoryTest {
 
 	@Test
 	public void delete1() throws Exception {
-
+		User newUser = iUserRepository.save(user);
+		Assert.assertNotNull(iUserRepository.findOne(newUser.getUserId()));
+		iUserRepository.delete(newUser);
+		Assert.assertNull(iUserRepository.findOne(newUser.getUserId()));
 	}
 
 }
