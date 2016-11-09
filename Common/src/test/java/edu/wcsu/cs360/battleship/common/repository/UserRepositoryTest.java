@@ -12,10 +12,6 @@ import org.junit.Test;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
-import java.util.List;
-
-import static org.junit.Assert.*;
-
 /**
  * Created by William Callahan on 11/7/2016.
  */
@@ -92,5 +88,5 @@ public class UserRepositoryTest {
 	public void delete1() throws Exception {
 
 	}
-	
+
 }
