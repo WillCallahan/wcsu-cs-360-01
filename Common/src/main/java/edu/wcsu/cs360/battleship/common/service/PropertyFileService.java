@@ -52,7 +52,7 @@ public class PropertyFileService {
 		try {
 			return new FileInputStream(fileName);
 		} catch (IOException e) {
-			log.error("Unable to read property file " + fileName + " - attempting to get file from classpath.", e);
+			log.warn("Unable to read property file " + fileName + " - attempting to get file from classpath.", e);
 		}
 		return this.getClass().getClassLoader().getResourceAsStream(fileName);
 	}
