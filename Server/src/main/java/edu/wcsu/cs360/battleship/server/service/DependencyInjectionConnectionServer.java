@@ -1,6 +1,5 @@
 package edu.wcsu.cs360.battleship.server.service;
 
-import edu.wcsu.cs360.battleship.common.service.GameConnectionService;
 import edu.wcsu.cs360.battleship.common.service.IConnectionService;
 import edu.wcsu.cs360.battleship.common.service.IDispatcher;
 import org.apache.commons.logging.Log;
@@ -15,6 +14,7 @@ public class DependencyInjectionConnectionServer implements IConnectionServer {
 	private Log log = LogFactory.getLog(this.getClass());
 	private ServerSocketFactory serverSocketFactory;
 	private IDispatcher iDispatcher;
+	private static final int MAX_CLIENTS = 2;
 	
 	private DependencyInjectionConnectionServer() {
 		
@@ -39,14 +39,25 @@ public class DependencyInjectionConnectionServer implements IConnectionServer {
 	 */
 	@Override
 	public void run(int port) {
+		log.info("Attempting to listen for clients...");
 		try (ServerSocket serverSocket = serverSocketFactory.createServerSocket(port)) {
+			log.info("Successfully connected to port " + serverSocket.getLocalPort());
 			while (true) {
-				IConnectionService iConnectionService = new GameConnectionService(iDispatcher);
-				iConnectionService.accept(serverSocket.accept());
+				IConnectionService iConnectionService = new ClientConnectionService(iDispatcher);
+				for (int i = 0; i < MAX_CLIENTS; i++) {
+					log.info("Waiting for client " + (i + 1) + " of " + MAX_CLIENTS);
+					try {
+						iConnectionService.accept(serverSocket.accept());
+					} catch (IOException e) {
+						log.error("Failed to connect client " + (i + 1) + " of " + MAX_CLIENTS, e);
+					}
+				}
+				log.info("Game Started!");
 			}
 		} catch (IOException e) {
 			log.error("Socket Error", e);
 		}
+		log.info("Exiting DependencyInjectionConnectionServer");
 	}
 	
 	/**

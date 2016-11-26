@@ -2,6 +2,8 @@ package edu.wcsu.cs360.battleship.common.service;
 
 import edu.wcsu.cs360.battleship.common.domain.socket.Request;
 import edu.wcsu.cs360.battleship.common.domain.socket.Response;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -10,6 +12,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public class DispatcherService implements IDispatcher {
+	
+	private Log log = LogFactory.getLog(this.getClass());
 	private DependencyInjectionService dependencyInjectionService;
 	private List<Class> registeredControllerList;
 	
@@ -26,6 +30,9 @@ public class DispatcherService implements IDispatcher {
 
 	@Override
 	public Response dispatch(Request request) {
+		if (request == null)
+			throw new IllegalArgumentException();
+		log.info("Dispatching request " + request.toString());
 		String path[] = request.getTarget().split("\\.");
 		if (path.length < 2)
 			throw new IllegalArgumentException();

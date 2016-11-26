@@ -1,5 +1,5 @@
 <component name="ArtifactManager">
-  <artifact type="jar" name="Server:jar">
+  <artifact type="jar" build-on-make="true" name="Server:jar">
     <output-path>$PROJECT_DIR$/out/artifacts/Server_jar</output-path>
     <root id="archive" name="Server.jar">
       <element id="module-output" name="Server" />
@@ -27,13 +27,13 @@
       <element id="extracted-dir" path="$PROJECT_DIR$/Common/lib/mchange-commons-java-0.2.3.4.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$PROJECT_DIR$/Common/lib/xml-apis-1.0.b2.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$PROJECT_DIR$/Common/lib/persistence-api-1.0.2.jar" path-in-jar="/" />
-      <element id="library" level="project" name="org.hibernate:hibernate-entitymanager:5.2.3.Final" />
-      <element id="library" level="project" name="log4j:log4j:1.2.17" />
-      <element id="library" level="project" name="org.slf4j:slf4j-api:1.7.21" />
-      <element id="library" level="project" name="commons-logging:commons-logging:1.2" />
-      <element id="library" level="project" name="ojdbc6" />
       <element id="jpa-descriptors" facet="Common/jpa/JPA" />
-      <element id="library" level="project" name="org.hibernate:hibernate-c3p0:5.2.4.Final" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/commons-logging-1.2.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/jackson-databind-2.8.5.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/jackson-annotations-2.8.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/jackson-core-2.8.5.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/slf4j-api-1.7.21.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/Common/libraries/ojdbc6.jar" path-in-jar="/" />
     </root>
   </artifact>
 </component>

@@ -37,7 +37,7 @@ public class ServerMainController {
 	
 	public void run() {
 		log.info("Starting application!");
-		
+		iConnectionServer.run();
 		log.info("Ending application!");
 	}
 	

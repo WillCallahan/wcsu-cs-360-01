@@ -1,7 +1,15 @@
 package edu.wcsu.cs360.battleship.client.view;
 
-/**
- * Created by William Callahan on 10/27/2016.
- */
+import javax.swing.*;
+
 public class LoginView {
+	
+	private JButton button1;
+	private JPasswordField passwordField1;
+	private JFormattedTextField formattedTextField1;
+	
+	public LoginView() {
+		
+	}
+	
 }
