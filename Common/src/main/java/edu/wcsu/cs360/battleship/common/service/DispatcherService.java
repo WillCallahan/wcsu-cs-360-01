@@ -12,7 +12,12 @@ import java.util.List;
 public class DispatcherService implements IDispatcher {
 	private DependencyInjectionService dependencyInjectionService;
 	private List<Class> registeredControllerList;
-
+	
+	/**
+	 * Constructor
+	 * @param dependencyInjectionService Dependency Injection Service containing require resolutions to dependencies
+	 * @param controllerArray Classes to invoke and inject dependencies into upon request
+	 */
 	public DispatcherService(DependencyInjectionService dependencyInjectionService, Class... controllerArray) {
 		this.dependencyInjectionService = dependencyInjectionService;
 		this.registeredControllerList = new ArrayList<>();
