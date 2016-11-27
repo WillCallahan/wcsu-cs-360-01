@@ -1,10 +1,13 @@
 package edu.wcsu.cs360.battleship.client.controller;
 
 import edu.wcsu.cs360.battleship.client.service.ServerConnectionHandlerService;
-import edu.wcsu.cs360.battleship.client.service.ServerConnectionService;
 import edu.wcsu.cs360.battleship.common.domain.socket.Request;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
+import javafx.stage.Stage;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -39,4 +42,13 @@ public class LoginController implements Initializable {
 		request.setTarget("gameController.getTest");
 		serverConnectionHandlerService.send(request);
 	}
+	
+	public void onFileMenuCloseClick(ActionEvent actionEvent) {
+		((Stage) (menuBar).getScene().getWindow()).close();
+	}
+	
+	@FXML
+	private MenuBar menuBar;
+	@FXML
+	private MenuItem fileMenuClose;
 }
