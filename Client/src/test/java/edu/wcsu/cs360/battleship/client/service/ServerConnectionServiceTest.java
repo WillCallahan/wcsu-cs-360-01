@@ -1,4 +1,4 @@
-package edu.wcsu.cs360.client.service;
+package edu.wcsu.cs360.battleship.client.service;
 
 import edu.wcsu.cs360.battleship.client.service.ServerConnectionService;
 import org.junit.After;

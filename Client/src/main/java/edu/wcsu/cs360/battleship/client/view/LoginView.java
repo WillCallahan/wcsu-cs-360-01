@@ -1,15 +1,19 @@
 package edu.wcsu.cs360.battleship.client.view;
 
-import javax.swing.*;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
-public class LoginView {
+public class LoginView extends FXMLFilePathView {
 	
-	private JButton button1;
-	private JPasswordField passwordField1;
-	private JFormattedTextField formattedTextField1;
+	private Log log = LogFactory.getLog(this.getClass());
+	private static final String FXML_FILE_PATH = "/views/login.fxml";
 	
 	public LoginView() {
 		
 	}
 	
+	@Override
+	protected String getFXMLFilePath() {
+		return FXML_FILE_PATH;
+	}
 }

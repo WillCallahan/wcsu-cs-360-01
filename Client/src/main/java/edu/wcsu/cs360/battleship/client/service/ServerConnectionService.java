@@ -41,9 +41,10 @@ public class ServerConnectionService extends Thread {
 		request.setBody("Sample");
 		request.setTarget("gameController.getTest");
 		try {
+			log.debug("Making request: " + request.toString());
 			objectMapper.writeValue(printWriter, request);
-			//Response response = objectMapper.readValue(socket.getInputStream(), Response.class);
-			//log.info("Received response: " + response.toString());
+			Response response = objectMapper.readValue(socket.getInputStream(), Response.class);
+			log.debug("Received response: " + response.toString());
 		} catch (IOException e) {
 			log.error("Unable to write to printWriter!", e);
 		}
