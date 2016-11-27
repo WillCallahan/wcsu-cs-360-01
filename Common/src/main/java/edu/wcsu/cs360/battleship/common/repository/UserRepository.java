@@ -34,6 +34,31 @@ public class UserRepository implements IUserRepository {
 			return null;
 		}
 	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public User findOneByUsername(String username) {
+		try {
+			return entityManager.createQuery("SELECT u FROM User u WHERE u.username = :username", User.class).setParameter("username", username).getSingleResult();
+		} catch (NoResultException e) {
+			log.warn("No result found; returning null. " + e.getMessage());
+			return null;
+		}
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public User findOneByUsernameAndPassword(String username, String password) {
+		try {
+			return entityManager.createQuery("SELECT u FROM User u WHERE u.username = :username AND u.password = :password", User.class).setParameter("username", username).setParameter("password", password).getSingleResult();
+		} catch (NoResultException e) {
+			log.warn("No result found; returning null. " + e.getMessage());
+			return null;
+		}
+	}
 
 	/**
 	 * {@inheritDoc}

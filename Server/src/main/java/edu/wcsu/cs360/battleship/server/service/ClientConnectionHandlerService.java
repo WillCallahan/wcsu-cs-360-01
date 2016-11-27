@@ -29,7 +29,7 @@ public class ClientConnectionHandlerService implements IConnectionListenerServic
 	@Override
 	public void accept(Socket socket) throws IOException {
 		ClientConnectionService clientConnectionService = new ClientConnectionService(socket, iDispatcher);
-		clientConnectionServiceList.add(clientConnectionService);
+		//clientConnectionServiceList.add(clientConnectionService);
 		clientConnectionService.start();
 	}
 	

@@ -15,7 +15,7 @@
         <menus>
           <Menu mnemonicParsing="false" text="File">
             <items>
-              <MenuItem id="fileMenuClose" fx:id="fileMenuClose" mnemonicParsing="false" onAction="#onFileMenuCloseClick" text="Close" />
+              <MenuItem fx:id="fileMenuClose" mnemonicParsing="false" onAction="#onFileMenuCloseClick" text="Close" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Help">
@@ -25,7 +25,7 @@
           </Menu>
         </menus>
       </MenuBar>
-      <Button id="loginButton" layoutX="272.0" layoutY="132.0" mnemonicParsing="false" text="Login" />
+      <Button id="loginButton" fx:id="loginButton" layoutX="272.0" layoutY="132.0" mnemonicParsing="false" onAction="#onLoginButtonClick" text="Login" />
       <Button id="createAccountButton" layoutX="223.0" layoutY="200.0" mnemonicParsing="false" text="Create Account" />
       <TextField layoutX="14.0" layoutY="63.0" prefHeight="25.0" prefWidth="304.0" promptText="Username" />
       <PasswordField layoutX="14.0" layoutY="99.0" prefHeight="25.0" prefWidth="304.0" promptText="Password" />

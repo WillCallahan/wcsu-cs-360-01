@@ -46,7 +46,6 @@ public class ClientConnectionService extends Thread {
 		} catch (IOException e) {
 			log.error("Failed to process request!", e);
 		} finally {
-			log.info("Closing socket");
 			try {
 				if (socket.isConnected())
 					socket.close();

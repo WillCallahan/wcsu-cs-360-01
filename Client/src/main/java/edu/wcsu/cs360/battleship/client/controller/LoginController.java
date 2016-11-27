@@ -1,6 +1,7 @@
 package edu.wcsu.cs360.battleship.client.controller;
 
 import edu.wcsu.cs360.battleship.client.service.ServerConnectionHandlerService;
+import edu.wcsu.cs360.battleship.common.domain.entity.User;
 import edu.wcsu.cs360.battleship.common.domain.socket.Request;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -45,6 +46,12 @@ public class LoginController implements Initializable {
 	
 	public void onFileMenuCloseClick(ActionEvent actionEvent) {
 		((Stage) (menuBar).getScene().getWindow()).close();
+	}
+	
+	public void onLoginButtonClick(ActionEvent actionEvent) {
+		User user = new User();
+		user.setUserId(1);
+		serverConnectionHandlerService.send(new Request("authenticationController.authenticate", user));
 	}
 	
 	@FXML

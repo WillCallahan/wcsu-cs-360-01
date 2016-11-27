@@ -72,5 +72,9 @@ public class DependencyInjectionService {
 			return field.getName();
 		}
 	}
+	
+	public Iterable<Object> getDependencyList() {
+		return dependencyMap.values();
+	}
 
 }

@@ -24,6 +24,9 @@ public class Response {
 		this.body = body;
 	}
 	
+	public Response(Object body, int statusCode) {
+		
+	}
 	public Response(int statusCode) {
 		
 	}
@@ -54,6 +57,10 @@ public class Response {
 
 	public Object getBody() {
 		return body;
+	}
+	
+	public <T> T getBody(Class<T> clazz) {
+		return clazz.cast(body);
 	}
 
 	public void setBody(String body) {

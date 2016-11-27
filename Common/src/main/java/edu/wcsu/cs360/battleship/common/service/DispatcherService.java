@@ -16,6 +16,7 @@ public class DispatcherService implements IDispatcher {
 	private Log log = LogFactory.getLog(this.getClass());
 	private DependencyInjectionService dependencyInjectionService;
 	private List<Class> registeredControllerList;
+	private List<IClassCastService> iClassCastServicesList;
 	
 	/**
 	 * Constructor
@@ -26,6 +27,8 @@ public class DispatcherService implements IDispatcher {
 		this.dependencyInjectionService = dependencyInjectionService;
 		this.registeredControllerList = new ArrayList<>();
 		this.registeredControllerList.addAll(Arrays.asList(controllerArray));
+		this.iClassCastServicesList = new ArrayList<>();
+		this.iClassCastServicesList.add(new ObjectMapperClassCastService());
 	}
 
 	@Override
@@ -36,14 +39,15 @@ public class DispatcherService implements IDispatcher {
 		String path[] = request.getTarget().split("\\.");
 		if (path.length < 2)
 			throw new IllegalArgumentException();
-		for (Class c : registeredControllerList) {
-			if (path[0].equals(Character.toLowerCase(c.getSimpleName().charAt(0)) + c.getSimpleName().substring(1))) {
-				for (Method method : c.getMethods()) {
+		for (Class clazz : registeredControllerList) {
+			if (path[0].equals(Character.toLowerCase(clazz.getSimpleName().charAt(0)) + clazz.getSimpleName().substring(1))) {
+				for (Method method : clazz.getMethods()) {
 					if (method.getName().equals(path[1])) {
+						tryCastRequestType(method, request);
 						try {
-							Object object = c.newInstance();
+							Object object = clazz.newInstance();
 							dependencyInjectionService.injectDependencies(object);
-							return (Response) method.invoke(object);
+							return (Response) method.invoke(object, getArguments(method, request, request.getBody()));
 						} catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
 							e.printStackTrace();
 							return new Response("", 500, "Error: " + e.getMessage(), "");
@@ -53,6 +57,72 @@ public class DispatcherService implements IDispatcher {
 			}
 		}
 		throw new IllegalArgumentException("Target not found!");
+	}
+	
+	protected Object[] getArguments(Method method, Object... knownObjects) {
+		List<Object> objectList = new ArrayList<>();
+		for (int i = 0; i < method.getParameterTypes().length; i++) {
+			log.trace("Searching for instances of " + method.getParameterTypes()[i]);
+			Object foundObject = null;
+			for (Object knownObject : knownObjects) {
+				if (method.getParameterTypes()[i] == knownObject.getClass()) {
+					foundObject = knownObject;
+					break;
+				}
+			}
+			for (Object object : dependencyInjectionService.getDependencyList()) {
+				if (method.getParameterTypes()[i] == object.getClass()) {
+					foundObject = object;
+					break;
+				}
+			}
+			if (foundObject == null)
+				throw new IllegalArgumentException("Argument " + i + " instance for method " + method.toString() + " of " + method.getDeclaringClass().toString() + " not found!");
+			else {
+				objectList.add(foundObject);
+				log.trace("Argument " + i + " instance for method " + method.toString() + " found: " + foundObject);
+			}
+		}
+		return objectList.toArray();
+	}
+	
+	protected void evaluateRequest(Request request) {
+		
+	}
+	
+	/**
+	 * Gets the first {@link Class} from the {@link Method#getParameterTypes()} where the class is not found in the
+	 * {@code clazzes} argument. If the {@link Method#getParameterTypes()} contains all classes in the {@code clazzes},
+	 * then {@code null} is returned.
+	 * @param method Method to get Parameter Classes from
+	 * @param clazzes Classes to exclude
+	 * @return First class of a method not in the clazzes argument or null
+	 */
+	protected Class getClassOfMethodParameterByIsNotClass(Method method, Class... clazzes) {
+		for (int i = 0; i < method.getParameterTypes().length; i++) {
+			boolean classFound = false;
+			for (int o = 0; o < clazzes.length; o++) {
+				if (method.getParameterTypes()[i] == clazzes[o])
+					classFound = true;
+			}
+			if (!classFound)
+				return method.getParameterTypes()[i];
+		}
+		return null;
+	}
+	
+	protected void tryCastRequestType(Method method, Request request) {
+		Class<?> clazz = getClassOfMethodParameterByIsNotClass(method, Request.class);
+		if (clazz != null) {
+			for (IClassCastService iClassCastService : iClassCastServicesList) {
+				try {
+					request.setBody(iClassCastService.cast(request.getBody(), clazz));
+					log.debug("Request object body successfully casted to " + clazz);
+				} catch (Exception e) {
+					log.debug("Unable to cast request object body to " + clazz, e);
+				}
+			}
+		}
 	}
 
 }

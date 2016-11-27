@@ -19,6 +19,12 @@ public class User implements Serializable {
 	@SequenceGenerator(sequenceName = "USER_PROFILE_SEQ", initialValue = 1, name = "USER_PROFILE_GEN")
 	private long userId;
 
+	@Column(name = "USERNAME", length = 255, nullable = false)
+	private String username;
+	
+	@Column(name = "PASSWORD", length = 64, nullable = false)
+	private String password;
+	
 	@Column(name = "FIRST_NAME", length = 50)
 	private String firstName;
 
@@ -46,7 +52,23 @@ public class User implements Serializable {
 	public void setUserId(long userId) {
 		this.userId = userId;
 	}
-
+	
+	public String getUsername() {
+		return username;
+	}
+	
+	public void setUsername(String username) {
+		this.username = username;
+	}
+	
+	public String getPassword() {
+		return password;
+	}
+	
+	public void setPassword(String password) {
+		this.password = password;
+	}
+	
 	public String getFirstName() {
 		return firstName;
 	}
@@ -77,5 +99,13 @@ public class User implements Serializable {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+	
+	public Role getRole() {
+		return role;
+	}
+	
+	public void setRole(Role role) {
+		this.role = role;
 	}
 }

@@ -71,6 +71,10 @@ public class Request {
 	public Object getBody() {
 		return body;
 	}
+	
+	public <T> T getBody(Class<T> clazz) {
+		return clazz.cast(body);
+	}
 
 	public void setBody(Object body) {
 		this.body = body;
