@@ -1,6 +1,8 @@
 package edu.wcsu.cs360.battleship.client.controller;
 
+import edu.wcsu.cs360.battleship.client.service.ServerConnectionHandlerService;
 import edu.wcsu.cs360.battleship.client.service.ServerConnectionService;
+import edu.wcsu.cs360.battleship.common.domain.socket.Request;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import org.apache.commons.logging.Log;
@@ -14,7 +16,7 @@ public class LoginController implements Initializable {
 	
 	private Log log = LogFactory.getLog(this.getClass());
 	@Inject
-	private ServerConnectionService serverConnectionService;
+	private ServerConnectionHandlerService serverConnectionHandlerService;
 	
 	public LoginController() {
 		
@@ -28,9 +30,13 @@ public class LoginController implements Initializable {
 		log.info("Initializing " + getClass());
 	}
 	
-	public void onHelpMenuAboutClick(ActionEvent actionEvent) {
+	public void onHelpMenuAboutClick(ActionEvent actionEvent) throws InterruptedException {
 		log.info("I just got clicked!");
-		log.info("The server connection service... " + serverConnectionService);
-		serverConnectionService.run();
+		log.info("The server connection service... " + serverConnectionHandlerService);
+		Request request = new Request();
+		request.setContentType("application/json");
+		request.setBody("Sample");
+		request.setTarget("gameController.getTest");
+		serverConnectionHandlerService.send(request);
 	}
 }

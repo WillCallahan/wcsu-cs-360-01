@@ -23,6 +23,10 @@ public class Response {
 		this.message = message;
 		this.body = body;
 	}
+	
+	public Response(int statusCode) {
+		
+	}
 
 	public String getContentType() {
 		return contentType;

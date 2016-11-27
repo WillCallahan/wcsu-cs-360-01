@@ -1,7 +1,7 @@
 package edu.wcsu.cs360.battleship.client.controller;
 
 import com.airhacks.afterburner.injection.Injector;
-import edu.wcsu.cs360.battleship.client.service.ServerConnectionService;
+import edu.wcsu.cs360.battleship.client.service.ServerConnectionHandlerService;
 import edu.wcsu.cs360.battleship.client.view.LoginView;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -19,7 +19,7 @@ public class ClientMainController extends Application {
 	
 	private void setupInjector() throws Exception {
 		log.info("Creating dependency injection instances...");
-		Injector.setModelOrService(ServerConnectionService.class, new ServerConnectionService("localhost", 8000));
+		Injector.setModelOrService(ServerConnectionHandlerService.class, new ServerConnectionHandlerService("localhost", 8000));
 		log.info("Successfully created dependency injection instances!");
 	}
 	
@@ -34,8 +34,8 @@ public class ClientMainController extends Application {
 		} catch (Exception e) {
 			log.error("Unable to start application!", e);
 		}
-		LoginView loginController = new LoginView();
-		Scene scene = new Scene(loginController.getView());
+		LoginView loginView = new LoginView();
+		Scene scene = new Scene(loginView.getView());
 		stage.setScene(scene);
 		stage.show();
 	}

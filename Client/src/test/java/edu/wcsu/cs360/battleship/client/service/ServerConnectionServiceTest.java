@@ -10,7 +10,7 @@ public class ServerConnectionServiceTest {
 	
 	@Before
 	public void setUp() throws Exception {
-		serverConnectionService = new ServerConnectionService("localhost", 8000);
+		
 	}
 	
 	@After

@@ -1,52 +1,70 @@
 package edu.wcsu.cs360.battleship.client.service;
 
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.wcsu.cs360.battleship.common.domain.socket.Request;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import edu.wcsu.cs360.battleship.common.domain.socket.Response;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.net.Socket;
 
-public class ServerConnectionService {
+public class ServerConnectionService<T, U> extends Thread {
 	
 	private Log log = LogFactory.getLog(this.getClass());
 	private Socket socket;
 	private ObjectMapper objectMapper;
-	private PrintWriter printWriter;
+	private T request;
+	private U response;
 	
 	private ServerConnectionService() {
 		socket = null;
+		response = null;
+		request = null;
 		objectMapper = new ObjectMapper();
+		objectMapper.configure(JsonParser.Feature.AUTO_CLOSE_SOURCE, false);
+		objectMapper.configure(JsonGenerator.Feature.AUTO_CLOSE_TARGET, false);
+		objectMapper.configure(SerializationFeature.CLOSE_CLOSEABLE, false);
 	}
 	
-	public ServerConnectionService(Socket socket) throws IOException {
+	public ServerConnectionService(Socket socket, T request) throws IOException {
 		this();
 		this.socket = socket;
-		printWriter = new PrintWriter(socket.getOutputStream(), true);
+		this.request = request;
 	}
 	
-	public ServerConnectionService(String address, int port) throws IOException {
+	public ServerConnectionService(String address, int port, T request) throws IOException {
 		this();
 		this.socket = new Socket(address, port);
-		printWriter = new PrintWriter(socket.getOutputStream(), true);
+		this.request = request;
 	}
 	
 	public void run() {
-		Request request = new Request();
-		request.setContentType("application/json");
-		request.setBody("Sample");
-		request.setTarget("gameController.getTest");
 		try {
-			log.debug("Making request: " + request.toString());
-			objectMapper.writeValue(printWriter, request);
+			log.info("Making request: " + request.toString());
+			objectMapper.writeValue(socket.getOutputStream(), request);
 			Response response = objectMapper.readValue(socket.getInputStream(), Response.class);
-			log.debug("Received response: " + response.toString());
+			log.info("Received response: " + response.toString());
 		} catch (IOException e) {
 			log.error("Unable to write to printWriter!", e);
+		} finally {
+			log.info("Closing socket");
+			try {
+				if (socket.isConnected())
+					socket.close();
+			} catch (IOException e) {
+				log.error("Unable to close socket!", e);
+			}
 		}
 	}
 	
+	public void setRequest(T request) {
+		this.request = request;
+	}
+	
+	public U getResponse() {
+		return response;
+	}
 }
