@@ -1,6 +1,6 @@
 package edu.wcsu.cs360.battleship.server.service;
 
-import edu.wcsu.cs360.battleship.common.domain.socket.ClientConnection;
+import edu.wcsu.cs360.battleship.common.domain.socket.ClientConnectionService;
 import edu.wcsu.cs360.battleship.common.service.IConnectionService;
 import edu.wcsu.cs360.battleship.common.service.IDispatcher;
 import org.apache.commons.logging.Log;
@@ -11,26 +11,26 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ClientConnectionService implements IConnectionService {
+public class ClientConnectionHandlerService implements IConnectionService {
 	
-	private List<ClientConnection> clientConnectionList;
+	private List<ClientConnectionService> clientConnectionServiceList;
 	private IDispatcher iDispatcher;
 	private Log log = LogFactory.getLog(this.getClass());
 	
-	private ClientConnectionService() {
-		this.clientConnectionList = new ArrayList<>();
+	private ClientConnectionHandlerService() {
+		this.clientConnectionServiceList = new ArrayList<>();
 	}
 	
-	public ClientConnectionService(IDispatcher iDispatcher) {
+	public ClientConnectionHandlerService(IDispatcher iDispatcher) {
 		this();
 		this.iDispatcher = iDispatcher;
 	}
 	
 	@Override
 	public void accept(Socket socket) throws IOException {
-		ClientConnection clientConnection = new ClientConnection(socket, iDispatcher);
-		clientConnectionList.add(clientConnection);
-		clientConnection.start();
+		ClientConnectionService clientConnectionService = new ClientConnectionService(socket, iDispatcher);
+		clientConnectionServiceList.add(clientConnectionService);
+		clientConnectionService.start();
 	}
 	
 }

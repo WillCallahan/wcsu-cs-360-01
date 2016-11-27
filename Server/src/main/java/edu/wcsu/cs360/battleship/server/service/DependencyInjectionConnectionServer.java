@@ -43,7 +43,7 @@ public class DependencyInjectionConnectionServer implements IConnectionServer {
 		try (ServerSocket serverSocket = serverSocketFactory.createServerSocket(port)) {
 			log.info("Successfully connected to port " + serverSocket.getLocalPort());
 			while (true) {
-				IConnectionService iConnectionService = new ClientConnectionService(iDispatcher);
+				IConnectionService iConnectionService = new ClientConnectionHandlerService(iDispatcher);
 				for (int i = 0; i < MAX_CLIENTS; i++) {
 					log.info("Waiting for client " + (i + 1) + " of " + MAX_CLIENTS);
 					try {

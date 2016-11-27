@@ -28,7 +28,13 @@ public class Request {
 	private Object body;
 
 	public Request() {
-
+		this.contentType = "application/json";
+		this.method = RequestMethod.GET;
+	}
+	
+	public Request(String target, Object body) {
+		this.target = target;
+		this.body = body;
 	}
 
 	public Request(String contentType, String target, RequestMethod method, Object body) {

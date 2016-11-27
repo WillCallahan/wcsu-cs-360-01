@@ -1,6 +1,5 @@
 package edu.wcsu.cs360.battleship.client.service;
 
-import edu.wcsu.cs360.battleship.client.service.ServerConnectionService;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,8 +20,7 @@ public class ServerConnectionServiceTest {
 	
 	@Test
 	public void run() throws InterruptedException {
-		serverConnectionService.start();
-		serverConnectionService.join();
+		
 	}
 	
 }

@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
 
-public class ServerConnectionService extends Thread {
+public class ServerConnectionService {
 	
 	private Log log = LogFactory.getLog(this.getClass());
 	private Socket socket;
@@ -34,7 +34,6 @@ public class ServerConnectionService extends Thread {
 		printWriter = new PrintWriter(socket.getOutputStream(), true);
 	}
 	
-	@Override
 	public void run() {
 		Request request = new Request();
 		request.setContentType("application/json");
