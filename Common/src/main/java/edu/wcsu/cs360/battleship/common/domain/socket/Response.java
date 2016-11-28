@@ -27,6 +27,7 @@ public class Response {
 	public Response(Object body, int statusCode) {
 		
 	}
+	
 	public Response(int statusCode) {
 		
 	}

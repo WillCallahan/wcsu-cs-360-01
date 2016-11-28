@@ -1,4 +1,4 @@
-package edu.wcsu.cs360.battleship.common.service;
+package edu.wcsu.cs360.battleship.common.service.aop;
 
 import edu.wcsu.cs360.battleship.common.domain.socket.Request;
 import edu.wcsu.cs360.battleship.common.domain.socket.Response;

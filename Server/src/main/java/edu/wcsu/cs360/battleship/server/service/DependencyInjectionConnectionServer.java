@@ -1,7 +1,7 @@
 package edu.wcsu.cs360.battleship.server.service;
 
-import edu.wcsu.cs360.battleship.common.service.IConnectionListenerService;
-import edu.wcsu.cs360.battleship.common.service.IDispatcher;
+import edu.wcsu.cs360.battleship.common.service.io.IConnectionListenerService;
+import edu.wcsu.cs360.battleship.common.service.aop.IDispatcher;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

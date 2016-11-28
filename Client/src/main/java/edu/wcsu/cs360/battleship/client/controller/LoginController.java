@@ -6,11 +6,13 @@ import edu.wcsu.cs360.battleship.common.domain.socket.Request;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
+import javafx.scene.control.*;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.jdeferred.DeferredManager;
+import org.jdeferred.impl.DefaultDeferredManager;
 
 import javax.inject.Inject;
 import java.net.URL;
@@ -49,13 +51,43 @@ public class LoginController implements Initializable {
 	}
 	
 	public void onLoginButtonClick(ActionEvent actionEvent) {
-		User user = new User();
-		user.setUserId(1);
-		serverConnectionHandlerService.send(new Request("authenticationController.authenticate", user));
+		User user = new User(usernameTextField.getText(), passwordPasswordField.getText());
+		DeferredManager deferredManager = new DefaultDeferredManager();
+		deferredManager.when(serverConnectionHandlerService.send(new Request("authenticationController.authenticateByUsernameAndPassword", user)))
+				.done(result -> {
+					
+				})
+				.fail(result -> {
+					log.error("Failed to get user!", result);
+				});
+		
+	}
+	
+	/**
+	 * Checks if the {@link LoginController#usernameTextField} and {@link LoginController#passwordPasswordField} text
+	 * have lengths greater than zero. If the lengths are greater than zero, then the Login button is enabled.
+	 * Otherwise, the login button is disabled.
+	 *
+	 * @param keyEvent Key Event
+	 */
+	public void inputFieldValueChanged(KeyEvent keyEvent) {
+		if (passwordPasswordField.getText() == null || passwordPasswordField.getText().length() <= 0)
+			loginButton.setDisable(true);
+		else if (usernameTextField.getText() == null || usernameTextField.getText().length() <= 0)
+			loginButton.setDisable(true);
+		else
+			loginButton.setDisable(false);
 	}
 	
 	@FXML
 	private MenuBar menuBar;
 	@FXML
 	private MenuItem fileMenuClose;
+	@FXML
+	private TextField usernameTextField;
+	@FXML
+	private PasswordField passwordPasswordField;
+	@FXML
+	private Button loginButton;
+	
 }

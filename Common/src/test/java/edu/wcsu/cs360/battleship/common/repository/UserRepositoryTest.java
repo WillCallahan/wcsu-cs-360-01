@@ -1,7 +1,7 @@
 package edu.wcsu.cs360.battleship.common.repository;
 
 import edu.wcsu.cs360.battleship.common.domain.entity.User;
-import edu.wcsu.cs360.battleship.common.service.PropertyFileService;
+import edu.wcsu.cs360.battleship.common.service.io.PropertyFileService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.After;

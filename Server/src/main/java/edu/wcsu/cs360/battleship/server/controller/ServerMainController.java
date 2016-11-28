@@ -2,10 +2,10 @@ package edu.wcsu.cs360.battleship.server.controller;
 
 import edu.wcsu.cs360.battleship.common.repository.IUserRepository;
 import edu.wcsu.cs360.battleship.common.repository.UserRepository;
-import edu.wcsu.cs360.battleship.common.service.DependencyInjectionService;
-import edu.wcsu.cs360.battleship.common.service.DispatcherService;
-import edu.wcsu.cs360.battleship.common.service.IDispatcher;
-import edu.wcsu.cs360.battleship.common.service.PropertyFileService;
+import edu.wcsu.cs360.battleship.common.service.di.DependencyInjectionService;
+import edu.wcsu.cs360.battleship.common.service.aop.DispatcherService;
+import edu.wcsu.cs360.battleship.common.service.aop.IDispatcher;
+import edu.wcsu.cs360.battleship.common.service.io.PropertyFileService;
 import edu.wcsu.cs360.battleship.server.service.DependencyInjectionConnectionServer;
 import edu.wcsu.cs360.battleship.server.service.IConnectionServer;
 import org.apache.commons.logging.Log;

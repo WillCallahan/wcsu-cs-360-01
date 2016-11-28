@@ -1,4 +1,4 @@
-package edu.wcsu.cs360.battleship.common.service;
+package edu.wcsu.cs360.battleship.common.service.serialize;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;

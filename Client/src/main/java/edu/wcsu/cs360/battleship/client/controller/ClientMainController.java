@@ -4,8 +4,11 @@ import com.airhacks.afterburner.injection.Injector;
 import edu.wcsu.cs360.battleship.client.service.ServerConnectionHandlerService;
 import edu.wcsu.cs360.battleship.client.view.LoginView;
 import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -37,6 +40,7 @@ public class ClientMainController extends Application {
 		LoginView loginView = new LoginView();
 		Scene scene = new Scene(loginView.getView());
 		stage.setScene(scene);
+		stage.setOnCloseRequest(event -> Platform.exit());
 		stage.show();
 	}
 	

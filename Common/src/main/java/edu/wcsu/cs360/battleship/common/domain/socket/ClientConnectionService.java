@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import edu.wcsu.cs360.battleship.common.service.IDispatcher;
+import edu.wcsu.cs360.battleship.common.service.aop.IDispatcher;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

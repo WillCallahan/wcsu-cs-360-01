@@ -1,4 +1,4 @@
-package edu.wcsu.cs360.battleship.common.service;
+package edu.wcsu.cs360.battleship.common.service.io;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

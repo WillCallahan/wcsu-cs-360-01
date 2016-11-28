@@ -20,8 +20,8 @@ public class AuthenticationController {
 	private IUserRepository iUserRepository;
 	
 	@Mapping(requestMethod = RequestMethod.GET)
-	public Response authenticate(Request request, User user) {
-		return new Response(iUserRepository.findOne(user.getUserId()), 200);
+	public Response authenticateByUsernameAndPassword(Request request, User user) {
+		return new Response(iUserRepository.findOneByUsernameAndPassword(user.getUsername(), user.getPassword()), 200);
 	}
 	
 }
