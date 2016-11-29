@@ -3,12 +3,12 @@ package edu.wcsu.cs360.battleship.client.view;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-public class LoginView extends FXMLFilePathView {
+public class BoardView extends FXMLFilePathView {
 	
 	private Log log = LogFactory.getLog(this.getClass());
-	private static final String FXML_FILE_PATH = "/views/login.fxml";
+	private static final String FXML_FILE_PATH = "/views/board.fxml";
 	
-	public LoginView() {
+	public BoardView() {
 		
 	}
 	
@@ -19,4 +19,5 @@ public class LoginView extends FXMLFilePathView {
 	protected String getFXMLFilePath() {
 		return FXML_FILE_PATH;
 	}
+	
 }

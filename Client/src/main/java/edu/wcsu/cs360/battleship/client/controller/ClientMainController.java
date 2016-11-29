@@ -1,6 +1,7 @@
 package edu.wcsu.cs360.battleship.client.controller;
 
 import com.airhacks.afterburner.injection.Injector;
+import com.sun.javafx.css.StyleManager;
 import edu.wcsu.cs360.battleship.client.service.ServerConnectionHandlerService;
 import edu.wcsu.cs360.battleship.client.view.LoginView;
 import javafx.application.Application;
@@ -42,6 +43,7 @@ public class ClientMainController extends Application {
 		stage.setScene(scene);
 		stage.setOnCloseRequest(event -> Platform.exit());
 		stage.show();
+		StyleManager.getInstance().addUserAgentStylesheet(getClass().getResource("/css/main.css").toExternalForm());
 	}
 	
 	/**

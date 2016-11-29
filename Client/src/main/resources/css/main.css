@@ -1,0 +1,9 @@
+.invalid {
+    -fx-text-fill: red;
+}
+
+.text-field.invalid,
+.text-area.invalid,
+.password-field.invalid {
+    -fx-border-color: red;
+}
