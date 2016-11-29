@@ -90,31 +90,10 @@ public class DispatcherService implements IDispatcher {
 		return objectList.toArray();
 	}
 	
-	/**
-	 * Gets the first {@link Class} from the {@link Method#getParameterTypes()} where the class is not found in the
-	 * {@code clazzes} argument. If the {@link Method#getParameterTypes()} contains all classes in the {@code clazzes},
-	 * then {@code null} is returned.
-	 * @param method Method to get Parameter Classes from
-	 * @param clazzes Classes to exclude
-	 * @return First class of a method not in the clazzes argument or null
-	 */
-	protected Class getClassOfMethodParameterByIsNotClass(Method method, Class... clazzes) {
-		for (int i = 0; i < method.getParameterTypes().length; i++) {
-			boolean classFound = false;
-			for (int o = 0; o < clazzes.length; o++) {
-				if (method.getParameterTypes()[i] == clazzes[o])
-					classFound = true;
-			}
-			if (!classFound)
-				return method.getParameterTypes()[i];
-		}
-		return null;
-	}
-	
 	protected void tryCastRequestType(Method method, Request request) {
-		Class<?> clazz = getClassOfMethodParameterByIsNotClass(method, Request.class);
+		Class<?> clazz = ReflectionUtility.getFirstClassOfMethodParametersByIsNotClass(method, Request.class);
 		if (clazz == null) {
-			List<Class<?>> classList = ReflectionUtility.getClassListOfGenericTypeInMethodGenericParameters(method, Request.class);
+			List<Class<?>> classList = ReflectionUtility.getClassListOfGenericTypeInMethodGenericParameterTypes(method, Request.class);
 			if (classList != null)
 				clazz = classList.get(0);
 		}

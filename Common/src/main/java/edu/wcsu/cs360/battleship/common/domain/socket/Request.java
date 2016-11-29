@@ -32,7 +32,14 @@ public class Request<T> {
 		this.method = RequestMethod.GET;
 	}
 	
+	public Request(String target, RequestMethod method, T body) {
+		this();
+		this.target = target;
+		this.method = method;
+		this.body = body;
+	}
 	public Request(String target, T body) {
+		this();
 		this.target = target;
 		this.body = body;
 	}

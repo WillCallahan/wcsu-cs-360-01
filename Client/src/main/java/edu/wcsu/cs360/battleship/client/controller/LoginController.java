@@ -1,9 +1,9 @@
 package edu.wcsu.cs360.battleship.client.controller;
 
-import edu.wcsu.cs360.battleship.client.service.ServerConnectionHandlerService;
+import edu.wcsu.cs360.battleship.client.repository.UserFutureRepository;
 import edu.wcsu.cs360.battleship.client.view.CreateAccountView;
 import edu.wcsu.cs360.battleship.common.domain.entity.User;
-import edu.wcsu.cs360.battleship.common.domain.socket.Request;
+import edu.wcsu.cs360.battleship.common.service.serialize.ObjectMapperClassCastService;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -24,7 +24,7 @@ public class LoginController implements Initializable {
 	
 	private Log log = LogFactory.getLog(this.getClass());
 	@Inject
-	private ServerConnectionHandlerService serverConnectionHandlerService;
+	private UserFutureRepository userFutureRepository;
 	
 	public LoginController() {
 		
@@ -39,13 +39,7 @@ public class LoginController implements Initializable {
 	}
 	
 	public void onHelpMenuAboutClick(ActionEvent actionEvent) throws InterruptedException {
-		log.info("I just got clicked!");
-		log.info("The server connection service... " + serverConnectionHandlerService);
-		Request request = new Request();
-		request.setContentType("application/json");
-		request.setBody("Sample");
-		request.setTarget("gameController.getTest");
-		serverConnectionHandlerService.send(request);
+		
 	}
 	
 	public void onFileMenuCloseClick(ActionEvent actionEvent) {
@@ -56,9 +50,10 @@ public class LoginController implements Initializable {
 		User user = new User(usernameTextField.getText(), passwordPasswordField.getText());
 		DeferredManager deferredManager = new DefaultDeferredManager();
 		loginButton.setDisable(true);
-		deferredManager.when(serverConnectionHandlerService.send(new Request<>("userApiController.findOneByUsernameAndPassword", user)))
+		deferredManager.when(userFutureRepository.findOneByUsernameAndPassword(user))
 				.done(result -> {
-					
+					ObjectMapperClassCastService objectMapperClassCastService = new ObjectMapperClassCastService();
+					log.info("Result: " + objectMapperClassCastService.cast(result.getBody(), User.class));
 				})
 				.fail(result -> {
 					log.error("Failed to get user!", result);
