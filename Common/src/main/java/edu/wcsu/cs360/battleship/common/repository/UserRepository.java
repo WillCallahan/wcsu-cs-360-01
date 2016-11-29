@@ -100,7 +100,7 @@ public class UserRepository implements IUserRepository {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Iterable<User> save(Iterable<User> typeList) {
+	public Iterable<User> saveAll(Iterable<User> typeList) {
 		List<User> userIterable = new ArrayList<>();
 		for (User user : typeList)
 			userIterable.add(save(user));
@@ -111,7 +111,7 @@ public class UserRepository implements IUserRepository {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void delete(Long aLong) {
+	public void deleteById(Long aLong) {
 		EntityTransaction entityTransaction = entityManager.getTransaction();
 		entityTransaction.begin();
 		entityManager.remove(entityManager.find(User.class, aLong));

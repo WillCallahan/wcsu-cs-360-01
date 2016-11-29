@@ -75,7 +75,7 @@ public class UserRepositoryTest {
 	public void save1() throws Exception {
 		List<User> userList = new ArrayList<>();
 		userList.add(user);
-		Iterable<User> userIterable = iUserRepository.save(userList);
+		Iterable<User> userIterable = iUserRepository.saveAll(userList);
 		Assert.assertNotNull(userIterable);
 	}
 
@@ -83,7 +83,7 @@ public class UserRepositoryTest {
 	public void delete() throws Exception {
 		User newUser = iUserRepository.save(user);
 		Assert.assertNotNull(iUserRepository.findOne(newUser.getUserId()));
-		iUserRepository.delete(newUser.getUserId());
+		iUserRepository.deleteById(newUser.getUserId());
 		Assert.assertNull(iUserRepository.findOne(newUser.getUserId()));
 	}
 

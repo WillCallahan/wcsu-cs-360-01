@@ -34,7 +34,7 @@ public interface ICrud<T, ID extends Serializable> {
 	 * If an instance of {@link T} exists for an {@link ID}, then the existing record of {@link T}
 	 * is updated.
 	 *
-	 * @param type Object to save
+	 * @param type Object to saveAll
 	 * @return Saved {@link T}
 	 */
 	T save(T type);
@@ -42,21 +42,21 @@ public interface ICrud<T, ID extends Serializable> {
 	/**
 	 * Calls {@link ICrud#save} for each instance of {@link T} in the {@link Iterable}
 	 *
-	 * @see ICrud#save
-	 * @param typeList List of {@link T} to save
+	 * @see ICrud#saveAll
+	 * @param typeList List of {@link T} to saveAll
 	 * @return Saved list of {@link T}
 	 */
-	Iterable<T>  save(Iterable<T> typeList);
+	Iterable<T> saveAll(Iterable<T> typeList);
 
 	/**
 	 * Deletes an instance of {@link T} with a matching {@link ID}
 	 * @param id {@link ID} of {@link T} to lookup for deletion
 	 */
-	void delete(ID id);
+	void deleteById(ID id);
 
 	/**
 	 * Deletes an instance of {@link T} with a matching {@link ID}
-	 * @param id {@link ID} of {@link T} to lookup for deletion
+	 * @param type {@link ID} of {@link T} to lookup for deletion
 	 */
 	void delete(T type);
 

@@ -5,7 +5,7 @@ import edu.wcsu.cs360.battleship.common.domain.enumeration.RequestMethod;
 /**
  * Request object used to encapsulate data received from Socket Requests
  */
-public class Request {
+public class Request<T> {
 	
 	/**
 	 * Content type of the {@link Request#body} (i.e. "application/json")
@@ -25,19 +25,19 @@ public class Request {
 	/**
 	 * Body of the request; the main content of the request
 	 */
-	private Object body;
+	private T body;
 
 	public Request() {
 		this.contentType = "application/json";
 		this.method = RequestMethod.GET;
 	}
 	
-	public Request(String target, Object body) {
+	public Request(String target, T body) {
 		this.target = target;
 		this.body = body;
 	}
 
-	public Request(String contentType, String target, RequestMethod method, Object body) {
+	public Request(String contentType, String target, RequestMethod method, T body) {
 		this.contentType = contentType;
 		this.target = target;
 		this.method = method;
@@ -68,15 +68,11 @@ public class Request {
 		this.method = method;
 	}
 
-	public Object getBody() {
+	public T getBody() {
 		return body;
 	}
-	
-	public <T> T getBody(Class<T> clazz) {
-		return clazz.cast(body);
-	}
 
-	public void setBody(Object body) {
+	public void setBody(T body) {
 		this.body = body;
 	}
 }

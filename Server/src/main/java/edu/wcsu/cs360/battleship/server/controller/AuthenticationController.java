@@ -21,7 +21,7 @@ public class AuthenticationController {
 	
 	@Mapping(requestMethod = RequestMethod.GET)
 	public Response authenticateByUsernameAndPassword(Request request, User user) {
-		return new Response(iUserRepository.findOneByUsernameAndPassword(user.getUsername(), user.getPassword()), 200);
+		return new Response<>(iUserRepository.findOneByUsernameAndPassword(user.getUsername(), user.getPassword()), 200);
 	}
 	
 }

@@ -5,6 +5,7 @@ import edu.wcsu.cs360.battleship.common.domain.socket.Response;
 import edu.wcsu.cs360.battleship.common.service.di.DependencyInjectionService;
 import edu.wcsu.cs360.battleship.common.service.serialize.IClassCastService;
 import edu.wcsu.cs360.battleship.common.service.serialize.ObjectMapperClassCastService;
+import edu.wcsu.cs360.battleship.common.utility.ReflectionUtility;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -53,7 +54,7 @@ public class DispatcherService implements IDispatcher {
 							return (Response) method.invoke(object, getArguments(method, request, request.getBody()));
 						} catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
 							e.printStackTrace();
-							return new Response("", 500, "Error: " + e.getMessage(), "");
+							return new Response<>("", 500, "Error: " + e.getMessage(), null);
 						}
 					}
 				}
@@ -89,10 +90,6 @@ public class DispatcherService implements IDispatcher {
 		return objectList.toArray();
 	}
 	
-	protected void evaluateRequest(Request request) {
-		
-	}
-	
 	/**
 	 * Gets the first {@link Class} from the {@link Method#getParameterTypes()} where the class is not found in the
 	 * {@code clazzes} argument. If the {@link Method#getParameterTypes()} contains all classes in the {@code clazzes},
@@ -116,7 +113,13 @@ public class DispatcherService implements IDispatcher {
 	
 	protected void tryCastRequestType(Method method, Request request) {
 		Class<?> clazz = getClassOfMethodParameterByIsNotClass(method, Request.class);
+		if (clazz == null) {
+			List<Class<?>> classList = ReflectionUtility.getClassListOfGenericTypeInMethodGenericParameters(method, Request.class);
+			if (classList != null)
+				clazz = classList.get(0);
+		}
 		if (clazz != null) {
+			log.debug("Object class of Request body: " + clazz);
 			for (IClassCastService iClassCastService : iClassCastServicesList) {
 				try {
 					request.setBody(iClassCastService.cast(request.getBody(), clazz));
@@ -126,6 +129,8 @@ public class DispatcherService implements IDispatcher {
 				}
 			}
 		}
+		else
+			log.warn("Object class of Request body not found!");
 	}
 
 }

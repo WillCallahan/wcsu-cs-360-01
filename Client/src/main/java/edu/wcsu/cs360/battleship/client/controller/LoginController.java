@@ -56,7 +56,7 @@ public class LoginController implements Initializable {
 		User user = new User(usernameTextField.getText(), passwordPasswordField.getText());
 		DeferredManager deferredManager = new DefaultDeferredManager();
 		loginButton.setDisable(true);
-		deferredManager.when(serverConnectionHandlerService.send(new Request("authenticationController.authenticateByUsernameAndPassword", user)))
+		deferredManager.when(serverConnectionHandlerService.send(new Request<>("userApiController.findOneByUsernameAndPassword", user)))
 				.done(result -> {
 					
 				})

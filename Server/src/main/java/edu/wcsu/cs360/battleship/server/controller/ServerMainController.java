@@ -26,7 +26,7 @@ public class ServerMainController {
 		EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory(propertyFileService.getProperty("jpa.persistence.unit.name").toString());
 		dependencyInjectionService = new DependencyInjectionService();
 		dependencyInjectionService.registerDependency(IUserRepository.class, new UserRepository(entityManagerFactory.createEntityManager()));
-		iDispatcher = new DispatcherService(dependencyInjectionService, GameController.class, AuthenticationController.class);
+		iDispatcher = new DispatcherService(dependencyInjectionService, GameController.class, AuthenticationController.class, UserApiController.class);
 		iConnectionServer = new DependencyInjectionConnectionServer(iDispatcher);
 	}
 	

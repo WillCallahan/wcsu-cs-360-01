@@ -3,33 +3,38 @@ package edu.wcsu.cs360.battleship.common.domain.socket;
 /**
  * Response object used as a wrapper for a response to Socket Requests
  */
-public class Response {
+public class Response<T> {
 
 	private String contentType;
 
-	private int statusCode;
+	private int statusCode = 200;
 
 	private String message;
 
-	private Object body;
+	private T body;
 
 	public Response() {
 
 	}
 
-	public Response(String contentType, int statusCode, String message, Object body) {
+	public Response(String contentType, int statusCode, String message, T body) {
 		this.contentType = contentType;
 		this.statusCode = statusCode;
 		this.message = message;
 		this.body = body;
 	}
 	
-	public Response(Object body, int statusCode) {
-		
+	public Response(T body) {
+		this.body = body;
+	}
+	
+	public Response(T body, int statusCode) {
+		this.body = body;
+		this.statusCode = statusCode;
 	}
 	
 	public Response(int statusCode) {
-		
+		this.statusCode = statusCode;
 	}
 
 	public String getContentType() {
@@ -56,15 +61,8 @@ public class Response {
 		this.message = message;
 	}
 
-	public Object getBody() {
+	public T getBody() {
 		return body;
 	}
-	
-	public <T> T getBody(Class<T> clazz) {
-		return clazz.cast(body);
-	}
 
-	public void setBody(String body) {
-		this.body = body;
-	}
 }
