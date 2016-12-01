@@ -8,58 +8,52 @@ import java.util.concurrent.Future;
 /**
  * Standard Interface for accessing an {@link edu.wcsu.cs360.battleship.common.controller.ICrudApi}
  *
- * @param <T> Object to perform Crud operations upon
+ * @param <T> Model to Access
+ * @param <ID> Type of the Primary key of the model
  * @see edu.wcsu.cs360.battleship.common.controller.ICrudApi
  */
-public interface ICrudFuture<T> {
+public interface ICrudFuture<T, ID extends Serializable> {
 	
 	/**
-	 * @param request Request to send to a server
 	 * @return Response from the server in the future
 	 * @see edu.wcsu.cs360.battleship.common.repository.ICrud#findOne(Serializable)
 	 */
-	Future<Response> findOne(T request);
+	Future<Response> findOne(ID id);
 	
 	/**
-	 * @param request Request to send to a server
 	 * @return Response from the server in the future
 	 * @see edu.wcsu.cs360.battleship.common.repository.ICrud#findOne(Serializable)
 	 */
-	Future<Response> findAll(T request);
+	Future<Response> findAll();
 	
 	/**
-	 * @param request Request to send to a server
 	 * @return Response from the server in the future
 	 * @see edu.wcsu.cs360.battleship.common.repository.ICrud#count()
 	 */
-	Future<Response> count(T request);
+	Future<Response> count();
 	
 	/**
-	 * @param request Request to send to a server
 	 * @return Response from the server in the future
 	 * @see edu.wcsu.cs360.battleship.common.repository.ICrud#save(Object)
 	 */
-	Future<Response> save(T request);
+	Future<Response> save(T type);
 	
 	/**
-	 * @param request Request to send to a server
 	 * @return Response from the server in the future
 	 * @see edu.wcsu.cs360.battleship.common.repository.ICrud#saveAll(Iterable)
 	 */
-	Future<Response> saveAll(Iterable<T> request);
+	Future<Response> saveAll(Iterable<T> typeList);
 	
 	/**
-	 * @param request Request to send to a server
 	 * @return Response from the server in the future
 	 * @see edu.wcsu.cs360.battleship.common.repository.ICrud#deleteById(Serializable)
 	 */
-	Future<Response> deleteById(T request);
+	Future<Response> deleteById(ID id);
 	
 	/**
-	 * @param request Request to send to a server
 	 * @return Response from the server in the future
 	 * @see edu.wcsu.cs360.battleship.common.repository.ICrud#delete(Object)
 	 */
-	Future<Response> delete(T request);
+	Future<Response> delete(T type);
 	
 }

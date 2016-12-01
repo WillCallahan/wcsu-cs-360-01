@@ -26,7 +26,7 @@ public class Request<T> {
 	 * Body of the request; the main content of the request
 	 */
 	private T body;
-
+	
 	public Request() {
 		this.contentType = "application/json";
 		this.method = RequestMethod.GET;
@@ -38,48 +38,61 @@ public class Request<T> {
 		this.method = method;
 		this.body = body;
 	}
+	
 	public Request(String target, T body) {
 		this();
 		this.target = target;
 		this.body = body;
 	}
-
+	
 	public Request(String contentType, String target, RequestMethod method, T body) {
 		this.contentType = contentType;
 		this.target = target;
 		this.method = method;
 		this.body = body;
 	}
-
+	
 	public String getContentType() {
 		return contentType;
 	}
-
+	
 	public void setContentType(String contentType) {
 		this.contentType = contentType;
 	}
-
+	
 	public String getTarget() {
 		return target;
 	}
-
+	
 	public void setTarget(String target) {
 		this.target = target;
 	}
-
+	
 	public RequestMethod getMethod() {
 		return method;
 	}
-
+	
 	public void setMethod(RequestMethod method) {
 		this.method = method;
 	}
-
+	
 	public T getBody() {
 		return body;
 	}
-
+	
 	public void setBody(T body) {
 		this.body = body;
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String toString() {
+		return String.format("Request"
+				+ "%n\tContentType: " + contentType
+				+ "%n\tTarget: " + target
+				+ "%n\tMethod: " + method
+				+ "%n\tBody: " + body);
 	}
 }

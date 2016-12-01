@@ -1,7 +1,11 @@
 package edu.wcsu.cs360.battleship.client.controller;
 
+import edu.wcsu.cs360.battleship.client.utility.general.ViewUtility;
+import edu.wcsu.cs360.battleship.client.utility.notification.AlertUtility;
 import edu.wcsu.cs360.battleship.client.utility.validation.TextInputValidationUtility;
+import edu.wcsu.cs360.battleship.client.view.BoardView;
 import edu.wcsu.cs360.battleship.common.domain.entity.User;
+import edu.wcsu.cs360.battleship.common.domain.singleton.ApplicationSession;
 import edu.wcsu.cs360.battleship.common.repository.IUserFutureRepository;
 import edu.wcsu.cs360.battleship.common.service.serialize.IClassCastService;
 import edu.wcsu.cs360.battleship.common.service.serialize.ObjectMapperClassCastService;
@@ -9,6 +13,7 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -23,51 +28,69 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class CreateAccountController implements Initializable {
-
+	
 	private Log log = LogFactory.getLog(this.getClass());
 	@Inject
+	private ApplicationSession applicationSession;
+	@Inject
 	private IUserFutureRepository iUserFutureRepository;
-
+	
 	public CreateAccountController() {
 	}
-
+	
 	//region Event Handlers
-
+	
 	@SuppressWarnings("unchecked")
 	public void onCreateAccountButtonClick(ActionEvent actionEvent) {
 		if (!validateForm())
 			return;
+		createAccountButton.setDisable(true);
 		DeferredManager deferredManager = new DefaultDeferredManager();
-		Platform.runLater(new Runnable() {
-			@Override
-			public void run() {
-				final User user = null;
-				deferredManager.when(iUserFutureRepository.save(getUserFromForm()))
-						.done(result -> {
-							IClassCastService iClassCastService = new ObjectMapperClassCastService();
-							result.setBody(iClassCastService.cast(result.getBody(), User.class));
-
-							log.info("Successfully logged in user " + result.getBody());
-						})
-						.fail(result -> {
-							log.error("Unable to create user account ", result);
-						})
-						.always((state, resolved, rejected) -> {
-
+		deferredManager.when(iUserFutureRepository.findOneByUsername(usernameTextField.getText()))
+				.done(result -> {
+					if (AlertUtility.alertIfHasError(result))
+						return;
+					if (result.getBody() != null) {
+						Platform.runLater(() -> {
+							Alert alert = new Alert(Alert.AlertType.WARNING);
+							alert.setTitle("Username Exists!");
+							alert.setHeaderText("Username already exists");
+							alert.setContentText("Please try another username.");
+							alert.show();
+							createAccountButton.setDisable(false);
 						});
-			}
-		});
+					} else {
+						deferredManager.when(iUserFutureRepository.save(getUserFromForm()))
+								.done(resultChild -> {
+									AlertUtility.alertIfHasError(result);
+									log.info("Successfully logged in user " + resultChild.getBody());
+									Platform.runLater(() -> {
+										IClassCastService iClassCastService = new ObjectMapperClassCastService();
+										applicationSession.setUser(iClassCastService.cast(resultChild.getBody(), User.class));
+										ViewUtility.replace(new BoardView(), (Stage) createAccountButton.getScene().getWindow());
+									});
+								})
+								.fail(AlertUtility::alert)
+								.always((state, resolved, rejected) -> {
+									Platform.runLater(() -> {
+										createAccountButton.setDisable(false);
+									});
+								});
+					}
+				})
+				.fail(AlertUtility::alert);
 	}
 
+	
 	public void onCancelButtonClick(ActionEvent actionEvent) {
 		Stage stage = (Stage) cancelButton.getScene().getWindow();
 		stage.close();
 	}
-
+	
 	//endregion
-
+	
 	//region Common Methods
-
+	
 	private boolean validateForm() {
 		boolean valid = true;
 		if (TextInputValidationUtility.hasTextOrApplyCss(usernameTextField, passwordPasswordField, firstNameTextField).size() != 0)
@@ -76,7 +99,7 @@ public class CreateAccountController implements Initializable {
 			valid = false;
 		return valid;
 	}
-
+	
 	private User getUserFromForm() {
 		User user = new User();
 		user.setUsername(usernameTextField.getText());
@@ -87,9 +110,9 @@ public class CreateAccountController implements Initializable {
 		user.setEmail(emailTextField.getText());
 		return user;
 	}
-
+	
 	//endregion
-
+	
 	/**
 	 * {@inheritDoc}
 	 */
@@ -97,7 +120,7 @@ public class CreateAccountController implements Initializable {
 	public void initialize(URL location, ResourceBundle resources) {
 		log.info("Initializing " + getClass());
 	}
-
+	
 	@FXML
 	private Button createAccountButton;
 	@FXML
@@ -114,5 +137,5 @@ public class CreateAccountController implements Initializable {
 	private TextField emailTextField;
 	@FXML
 	private PasswordField passwordPasswordField;
-
+	
 }

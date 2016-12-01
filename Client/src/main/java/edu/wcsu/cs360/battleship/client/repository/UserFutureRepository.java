@@ -26,47 +26,80 @@ public class UserFutureRepository implements IUserFutureRepository {
 		this.serverConnectionHandlerService = serverConnectionHandlerService;
 	}
 	
-	
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
-	public Future<Response> findOneByUsername(User request) {
-		return serverConnectionHandlerService.send(new Request<>("userApiController.findOneByUsername", RequestMethod.GET, request));
+	public Future<Response> findOneByUsernameAndPassword(String username, String password) {
+		User user = new User(username, password);
+		return serverConnectionHandlerService.send(new Request<>("userApiController.findOneByUsernameAndPassword", RequestMethod.GET, user));
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
-	public Future<Response> findOneByUsernameAndPassword(User request) {
-		return serverConnectionHandlerService.send(new Request<>("userApiController.findOneByUsernameAndPassword", RequestMethod.GET, request));
+	public Future<Response> findOneByUsername(String username) {
+		User user = new User();
+		user.setUsername(username);
+		return serverConnectionHandlerService.send(new Request<>("userApiController.findOneByUsername", RequestMethod.GET, user));
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
-	public Future<Response> findOne(User request) {
-		return serverConnectionHandlerService.send(new Request<>("userApiController.findOne", RequestMethod.GET, request));
+	public Future<Response> findOne(Long id) {
+		User user = new User();
+		user.setUserId(id);
+		return serverConnectionHandlerService.send(new Request<>("userApiController.findOne", RequestMethod.GET, user));
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
-	public Future<Response> findAll(User request) {
-		return serverConnectionHandlerService.send(new Request<>("userApiController.findAll", RequestMethod.GET, request));
+	public Future<Response> findAll() {
+		return serverConnectionHandlerService.send(new Request<>("userApiController.findAll", RequestMethod.GET, null));
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
-	public Future<Response> count(User request) {
-		return serverConnectionHandlerService.send(new Request<>("userApiController.count", RequestMethod.GET, request));
+	public Future<Response> count() {
+		return serverConnectionHandlerService.send(new Request<>("userApiController.count", RequestMethod.GET, null));
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
-	public Future<Response> save(User request) {
-		return serverConnectionHandlerService.send(new Request<>("userApiController.save", RequestMethod.UPDATE, request));
+	public Future<Response> save(User user) {
+		return serverConnectionHandlerService.send(new Request<>("userApiController.save", RequestMethod.UPDATE, user));
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
-	public Future<Response> saveAll(Iterable<User> request) {
-		return serverConnectionHandlerService.send(new Request<>("userApiController.saveAll", RequestMethod.UPDATE, request));
+	public Future<Response> saveAll(Iterable<User> userIterable) {
+		return serverConnectionHandlerService.send(new Request<>("userApiController.saveAll", RequestMethod.UPDATE, userIterable));
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
-	public Future<Response> deleteById(User request) {
-		return serverConnectionHandlerService.send(new Request<>("userApiController.deleteById", RequestMethod.DELETE, request));
+	public Future<Response> deleteById(Long id) {
+		User user = new User();
+		user.setUserId(id);
+		return serverConnectionHandlerService.send(new Request<>("userApiController.deleteById", RequestMethod.DELETE, user));
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public Future<Response> delete(User request) {
 		return serverConnectionHandlerService.send(new Request<>("userApiController.delete", RequestMethod.DELETE, request));

@@ -68,5 +68,17 @@ public class Response<T> {
 	public void setBody(T body) {
 		this.body = body;
 	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String toString() {
+		return String.format("Response"
+				+ "%n\tContentType: " + contentType
+				+ "%n\tStatusCode: " + statusCode
+				+ "%n\tMessage: " + message
+				+ "%n\tBody: " + body);
+	}
 
 }

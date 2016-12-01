@@ -5,6 +5,7 @@ import edu.wcsu.cs360.battleship.common.domain.socket.Response;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import javax.annotation.PreDestroy;
 import java.io.IOException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -26,6 +27,12 @@ public class ServerConnectionHandlerService {
 		this();
 		this.address = address;
 		this.port = port;
+	}
+	
+	@PreDestroy
+	private void preDestroy() {
+		log.info("Shutting down ExecutorService");
+		executorService.shutdownNow();
 	}
 	
 	public Future<Response> send(Request request) {
