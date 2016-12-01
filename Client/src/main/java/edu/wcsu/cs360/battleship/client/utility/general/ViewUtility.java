@@ -14,10 +14,11 @@ public class ViewUtility {
 	 * @param fxmlView View to set current {@link Stage#scene} to
 	 * @param stage    Stage to modify
 	 */
-	public static void replace(FXMLView fxmlView, Stage stage) {
+	public static <T extends FXMLView> void replace(T fxmlView, Stage stage) {
 		Scene scene = new Scene(fxmlView.getView());
 		stage.close();
 		stage.setScene(scene);
+		stage.setTitle(getTitleFromClassName(fxmlView.getClass()));
 		stage.show();
 	}
 	
@@ -29,7 +30,7 @@ public class ViewUtility {
 	 * @param modality Modality of the View
 	 * @throws IllegalArgumentException If {@link Modality#WINDOW_MODAL} and {@link Window} is {@code null}
 	 */
-	public static void onTop(FXMLView fxmlView, Window window, Modality modality) {
+	public static <T extends FXMLView> void onTop(T fxmlView, Window window, Modality modality) {
 		if (modality == Modality.WINDOW_MODAL && window == null)
 			throw new IllegalArgumentException();
 		Stage stage = new Stage();
@@ -37,6 +38,7 @@ public class ViewUtility {
 		stage.initModality(modality);
 		stage.initOwner(window);
 		stage.setScene(scene);
+		stage.setTitle(getTitleFromClassName(fxmlView.getClass()));
 		stage.show();
 	}
 	
@@ -59,6 +61,17 @@ public class ViewUtility {
 	 */
 	public static void onTop(FXMLView fxmlView) {
 		onTop(fxmlView, null, Modality.APPLICATION_MODAL);
+	}
+	
+	/**
+	 * Gets the class name of an {@link FXMLView} for use as a title
+	 *
+	 * @param fxmlView FXML View to get class name of
+	 * @param <T>      Type that extends {@link FXMLView}
+	 * @return {@link Class#getSimpleName()} of the {@link FXMLView}
+	 */
+	public static <T extends FXMLView> String getTitleFromClassName(Class<T> fxmlView) {
+		return fxmlView.getSimpleName();
 	}
 	
 }

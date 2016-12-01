@@ -19,4 +19,5 @@ public class LoginView extends FXMLFilePathView {
 	protected String getFXMLFilePath() {
 		return FXML_FILE_PATH;
 	}
+	
 }

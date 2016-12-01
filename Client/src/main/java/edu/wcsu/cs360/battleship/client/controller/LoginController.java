@@ -13,6 +13,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import org.apache.commons.logging.Log;
@@ -94,8 +95,11 @@ public class LoginController implements Initializable {
 			loginButton.setDisable(true);
 		else if (usernameTextField.getText() == null || usernameTextField.getText().length() <= 0)
 			loginButton.setDisable(true);
-		else
+		else {
 			loginButton.setDisable(false);
+			if (keyEvent.getCode() == KeyCode.ENTER)
+				onLoginButtonClick(new ActionEvent());
+		}
 	}
 	
 	@FXML

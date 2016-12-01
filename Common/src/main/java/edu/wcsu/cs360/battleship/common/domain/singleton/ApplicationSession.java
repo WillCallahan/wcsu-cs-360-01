@@ -9,6 +9,13 @@ public class ApplicationSession implements Serializable {
 	
 	private User user;
 	
+	/**
+	 * Nullifies all fields of the object
+	 */
+	public void invalidate() {
+		user = null;
+	}
+	
 	public ApplicationSession() {
 		this.user = null;
 	}
@@ -20,4 +27,5 @@ public class ApplicationSession implements Serializable {
 	public void setUser(User user) {
 		this.user = user;
 	}
+	
 }

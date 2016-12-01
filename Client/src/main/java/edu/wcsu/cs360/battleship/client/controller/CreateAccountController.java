@@ -71,11 +71,7 @@ public class CreateAccountController implements Initializable {
 									});
 								})
 								.fail(AlertUtility::alert)
-								.always((state, resolved, rejected) -> {
-									Platform.runLater(() -> {
-										createAccountButton.setDisable(false);
-									});
-								});
+								.always((state, resolved, rejected) -> Platform.runLater(() -> createAccountButton.setDisable(false)));
 					}
 				})
 				.fail(AlertUtility::alert);

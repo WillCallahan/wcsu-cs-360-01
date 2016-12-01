@@ -4,6 +4,7 @@ import com.airhacks.afterburner.injection.Injector;
 import com.sun.javafx.css.StyleManager;
 import edu.wcsu.cs360.battleship.client.repository.UserFutureRepository;
 import edu.wcsu.cs360.battleship.client.service.ServerConnectionHandlerService;
+import edu.wcsu.cs360.battleship.client.utility.general.ViewUtility;
 import edu.wcsu.cs360.battleship.client.view.LoginView;
 import edu.wcsu.cs360.battleship.common.repository.IUserFutureRepository;
 import javafx.application.Application;
@@ -42,9 +43,7 @@ public class ClientMainController extends Application {
 		} catch (Exception e) {
 			log.error("Unable to start application!", e);
 		}
-		LoginView loginView = new LoginView();
-		Scene scene = new Scene(loginView.getView());
-		stage.setScene(scene);
+		ViewUtility.replace(new LoginView(), stage);
 		stage.setOnCloseRequest(event -> Platform.exit());
 		stage.show();
 		StyleManager.getInstance().addUserAgentStylesheet(getClass().getResource("/css/main.css").toExternalForm());

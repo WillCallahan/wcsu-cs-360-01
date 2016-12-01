@@ -67,6 +67,13 @@ public class AlertUtility {
 	
 	//region Response Alerts
 	
+	/**
+	 * Alerts the user about an error in a {@link Response}
+	 *
+	 * @param response   Response to check
+	 * @param headerText {@link Alert#setHeaderText(String)}
+	 * @return Whether or not the {@link Response} has an error
+	 */
 	public static boolean alertIfHasError(Response response, String headerText) {
 		if (ResponseUtility.hasError(response)) {
 			alert(headerText, response.getMessage());
@@ -75,6 +82,13 @@ public class AlertUtility {
 		return false;
 	}
 	
+	/**
+	 * Alerts the user about an error in a {@link Response}
+	 *
+	 * @param response Response to check
+	 * @return Whether or not the {@link Response} has an error
+	 * @see AlertUtility#alertIfHasError(Response, String)
+	 */
 	public static boolean alertIfHasError(Response response) {
 		return alertIfHasError(response, "An unexpected error occurred");
 	}
