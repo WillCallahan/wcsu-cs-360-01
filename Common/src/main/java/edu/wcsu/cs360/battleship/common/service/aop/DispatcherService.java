@@ -89,7 +89,8 @@ public class DispatcherService implements IDispatcher {
 		}
 		return objectList.toArray();
 	}
-	
+
+	@SuppressWarnings("unchecked")
 	protected void tryCastRequestType(Method method, Request request) {
 		Class<?> clazz = ReflectionUtility.getFirstClassOfMethodParametersByIsNotClass(method, Request.class);
 		if (clazz == null) {

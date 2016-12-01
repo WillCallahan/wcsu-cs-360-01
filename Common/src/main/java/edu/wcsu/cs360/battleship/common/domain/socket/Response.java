@@ -65,4 +65,8 @@ public class Response<T> {
 		return body;
 	}
 
+	public void setBody(T body) {
+		this.body = body;
+	}
+
 }

@@ -1,8 +1,11 @@
 package edu.wcsu.cs360.battleship.client.controller;
 
-import edu.wcsu.cs360.battleship.client.service.ServerConnectionHandlerService;
 import edu.wcsu.cs360.battleship.client.utility.validation.TextInputValidationUtility;
 import edu.wcsu.cs360.battleship.common.domain.entity.User;
+import edu.wcsu.cs360.battleship.common.repository.IUserFutureRepository;
+import edu.wcsu.cs360.battleship.common.service.serialize.IClassCastService;
+import edu.wcsu.cs360.battleship.common.service.serialize.ObjectMapperClassCastService;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -12,38 +15,59 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.jdeferred.DeferredManager;
+import org.jdeferred.impl.DefaultDeferredManager;
 
 import javax.inject.Inject;
 import java.net.URL;
 import java.util.ResourceBundle;
 
 public class CreateAccountController implements Initializable {
-	
+
 	private Log log = LogFactory.getLog(this.getClass());
 	@Inject
-	private ServerConnectionHandlerService serverConnectionHandlerService;
-	
+	private IUserFutureRepository iUserFutureRepository;
+
 	public CreateAccountController() {
 	}
-	
+
 	//region Event Handlers
-	
+
+	@SuppressWarnings("unchecked")
 	public void onCreateAccountButtonClick(ActionEvent actionEvent) {
 		if (!validateForm())
 			return;
-		User user = getUserFromForm();
-		
+		DeferredManager deferredManager = new DefaultDeferredManager();
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				final User user = null;
+				deferredManager.when(iUserFutureRepository.save(getUserFromForm()))
+						.done(result -> {
+							IClassCastService iClassCastService = new ObjectMapperClassCastService();
+							result.setBody(iClassCastService.cast(result.getBody(), User.class));
+
+							log.info("Successfully logged in user " + result.getBody());
+						})
+						.fail(result -> {
+							log.error("Unable to create user account ", result);
+						})
+						.always((state, resolved, rejected) -> {
+
+						});
+			}
+		});
 	}
-	
+
 	public void onCancelButtonClick(ActionEvent actionEvent) {
-		Stage stage = (Stage)cancelButton.getScene().getWindow();
+		Stage stage = (Stage) cancelButton.getScene().getWindow();
 		stage.close();
 	}
-	
+
 	//endregion
-	
+
 	//region Common Methods
-	
+
 	private boolean validateForm() {
 		boolean valid = true;
 		if (TextInputValidationUtility.hasTextOrApplyCss(usernameTextField, passwordPasswordField, firstNameTextField).size() != 0)
@@ -52,7 +76,7 @@ public class CreateAccountController implements Initializable {
 			valid = false;
 		return valid;
 	}
-	
+
 	private User getUserFromForm() {
 		User user = new User();
 		user.setUsername(usernameTextField.getText());
@@ -63,9 +87,9 @@ public class CreateAccountController implements Initializable {
 		user.setEmail(emailTextField.getText());
 		return user;
 	}
-	
+
 	//endregion
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -73,7 +97,7 @@ public class CreateAccountController implements Initializable {
 	public void initialize(URL location, ResourceBundle resources) {
 		log.info("Initializing " + getClass());
 	}
-	
+
 	@FXML
 	private Button createAccountButton;
 	@FXML
@@ -90,5 +114,5 @@ public class CreateAccountController implements Initializable {
 	private TextField emailTextField;
 	@FXML
 	private PasswordField passwordPasswordField;
-	
+
 }

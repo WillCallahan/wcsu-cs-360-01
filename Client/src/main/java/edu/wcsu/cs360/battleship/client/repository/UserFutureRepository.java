@@ -17,9 +17,13 @@ public class UserFutureRepository implements IUserFutureRepository {
 	private Log log = LogFactory.getLog(this.getClass());
 	@Inject
 	private ServerConnectionHandlerService serverConnectionHandlerService;
-	
+
 	public UserFutureRepository() {
-		
+
+	}
+
+	public UserFutureRepository(ServerConnectionHandlerService serverConnectionHandlerService) {
+		this.serverConnectionHandlerService = serverConnectionHandlerService;
 	}
 	
 	

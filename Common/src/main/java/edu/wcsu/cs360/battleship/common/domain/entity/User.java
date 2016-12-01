@@ -19,7 +19,7 @@ public class User implements Serializable {
 	@SequenceGenerator(sequenceName = "USER_PROFILE_SEQ", initialValue = 1, name = "USER_PROFILE_GEN")
 	private long userId;
 
-	@Column(name = "USERNAME", length = 255, nullable = false)
+	@Column(name = "USERNAME", length = 255, nullable = false, unique = true)
 	private String username;
 	
 	@Column(name = "PASSWORD", length = 64, nullable = false)
@@ -34,7 +34,7 @@ public class User implements Serializable {
 	@Column(name = "LAST_NAME", length = 50)
 	private String lastName;
 
-	@Column(name = "EMAIL", unique = true, length = 75)
+	@Column(name = "EMAIL", length = 75, nullable = false, unique = true)
 	private String email;
 
 	@Column(name = "ROLE", nullable = false)
