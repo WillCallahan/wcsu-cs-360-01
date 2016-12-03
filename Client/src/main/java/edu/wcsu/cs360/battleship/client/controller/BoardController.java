@@ -3,6 +3,7 @@ package edu.wcsu.cs360.battleship.client.controller;
 import edu.wcsu.cs360.battleship.client.service.ServerConnectionHandlerService;
 import edu.wcsu.cs360.battleship.client.service.canvas.BoardDrawService;
 import edu.wcsu.cs360.battleship.common.domain.singleton.ApplicationSession;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.layout.Pane;
@@ -27,6 +28,14 @@ public class BoardController implements Initializable {
 		opponentBoardDrawServer = null;
 		playerBoardDrawServer = null;
 	}
+	
+	//region Event Handlers
+	
+	public void onStartGameButtonClick(ActionEvent actionEvent) {
+		updateBoard();
+	}
+	
+	//endregion
 	
 	
 	/**

@@ -5,6 +5,7 @@ import com.sun.javafx.css.StyleManager;
 import edu.wcsu.cs360.battleship.client.repository.UserFutureRepository;
 import edu.wcsu.cs360.battleship.client.service.ServerConnectionHandlerService;
 import edu.wcsu.cs360.battleship.client.utility.general.ViewUtility;
+import edu.wcsu.cs360.battleship.client.utility.notification.AlertUtility;
 import edu.wcsu.cs360.battleship.client.view.LoginView;
 import edu.wcsu.cs360.battleship.common.repository.IUserFutureRepository;
 import javafx.application.Application;
@@ -42,7 +43,9 @@ public class ClientMainController extends Application {
 			setupInjector();
 		} catch (Exception e) {
 			log.error("Unable to start application!", e);
+			return;
 		}
+		Thread.setDefaultUncaughtExceptionHandler((t, e) -> AlertUtility.alert(e, "Please contact an administrator."));
 		ViewUtility.replace(new LoginView(), stage);
 		stage.setOnCloseRequest(event -> Platform.exit());
 		stage.show();

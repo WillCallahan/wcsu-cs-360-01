@@ -59,8 +59,19 @@ public class AlertUtility {
 	 * @see AlertUtility#alert(String, Alert.AlertType)
 	 */
 	public static void alert(Throwable e) {
-		log.error(e);
-		alert(e.getMessage(), Alert.AlertType.ERROR);
+		alert(e, null);
+	}
+	
+	/**
+	 * Alerts the user of a {@link Throwable} and a provided contextMessage
+	 *
+	 * @param e Exception to get details from
+	 * @param contentText Addition message information to display to the user
+	 * @see AlertUtility#alert(String, Alert.AlertType)
+	 */
+	public static void alert(Throwable e, String contentText) {
+		log.error(e.getMessage(), e);
+		alert(e.getMessage(), contentText, Alert.AlertType.ERROR);
 	}
 	
 	//endregion
