@@ -2,6 +2,7 @@ package edu.wcsu.cs360.battleship.client.service.canvas;
 
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 
@@ -12,7 +13,7 @@ public class BoardDrawService {
 	
 	private static final int GRID_BOX_MIN_HEIGHT_PIXELS = 50;
 	private static final int GRID_BOX_MIN_WIDTH_PIXELS = 50;
-	private static final int GRID_LINE_WIDTH_PIXELS = 2;
+	private static final int GRID_LINE_WIDTH_PIXELS = 1;
 	private static final Color GRID_COLOR = Color.BLACK;
 	private static final Color GRID_FILL_COLOR = Color.TRANSPARENT;
 	
@@ -50,6 +51,7 @@ public class BoardDrawService {
 				Rectangle rectangle = new Rectangle(GRID_BOX_MIN_WIDTH_PIXELS, GRID_BOX_MIN_HEIGHT_PIXELS);
 				rectangle.setFill(GRID_FILL_COLOR);
 				rectangle.setStroke(GRID_COLOR);
+				rectangle.setStrokeWidth(GRID_LINE_WIDTH_PIXELS);
 				rectangle.relocate((i * GRID_BOX_MIN_WIDTH_PIXELS) + horizontalOffset, (o * GRID_BOX_MIN_HEIGHT_PIXELS) + verticalOffset);
 				pane.getChildren().add(rectangle);
 			}

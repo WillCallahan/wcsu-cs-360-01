@@ -6,6 +6,8 @@ import edu.wcsu.cs360.battleship.common.domain.singleton.ApplicationSession;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -58,5 +60,11 @@ public class BoardController implements Initializable {
 	private Pane opponentPane;
 	@FXML
 	private Pane playerPane;
+	@FXML
+	private Label notificationLabel;
+	@FXML
+	private Button startGameButton;
+	@FXML
+	private Button quitButton;
 	
 }
