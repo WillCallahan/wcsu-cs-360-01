@@ -1,0 +1,30 @@
+package edu.wcsu.cs360.battleship.common.domain.trans;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.junit.Test;
+
+public class PlayerTest {
+	
+	private Log log = LogFactory.getLog(this.getClass());
+	private Player bill = new Player(5);
+	
+	
+	/**
+	 * This is just like a main class; white your tests in here and click the play button to the left of the method
+	 * to run it. If an exception occurs, it is easier to debug
+	 */
+	@Test
+	public void hit_locTest() {
+		bill.usrboard.print();
+		bill.usrboard.hit_loc(3, 3);
+		/*
+		 * Use String.format("%n") for a new line; Windows uses "\r\n" for a new line while Linux uses "\n"
+		 * String.format("%n") will determine which one to use based on the operating system. Alternatively, you
+		 * can ue System.getProperty("line.separator"); for a new line
+		 */
+		log.info(String.format("%n a location was damaged%n"));
+		bill.usrboard.print();
+	}
+	
+}

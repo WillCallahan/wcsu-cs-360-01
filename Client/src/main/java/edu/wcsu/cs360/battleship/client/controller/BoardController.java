@@ -41,6 +41,7 @@ public class BoardController implements Initializable {
 	//region Button Event Handlers
 	
 	public void onStartGameButtonClick(ActionEvent actionEvent) {
+		
 	}
 	
 	//endregion
