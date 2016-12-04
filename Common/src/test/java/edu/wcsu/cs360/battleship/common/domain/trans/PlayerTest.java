@@ -27,4 +27,14 @@ public class PlayerTest {
 		bill.usrboard.print();
 	}
 	
+	@Test
+	public void hit_locTestException() throws Exception {
+		throw new Exception("This should throw an exception and fail the test");
+	}
+	
+	@Test(expected = Exception.class)
+	public void hit_locTestExceptionPass() throws Exception {
+		throw new Exception("This should throw an exception, but the test annotation will expect it. This is actually passing the test");
+	}
+	
 }
