@@ -19,6 +19,7 @@ import java.util.ResourceBundle;
 
 public class BoardController implements Initializable {
 	
+	private static final int MAX_SHIPS = 10; //FIXME: put this in the common module
 	private static final URL EMPTY_ICON_LOCATION = BoardController.class.getResource("/images/water.gif");
 	private static final URL SHIP_ICON_LOCATION = BoardController.class.getResource("/images/destroyer-icon.png");
 	private static final URL HIT_ICON_LOCATION = BoardController.class.getResource("/images/fire-icon.png");
@@ -47,7 +48,23 @@ public class BoardController implements Initializable {
 	//region Drag Event Handlers
 	
 	public void onPlayerPaneClicked(MouseEvent mouseEvent) {
-		log.trace("Opponent mouse dragged: X:" + mouseEvent.getX() + " Y: " + mouseEvent.getY());
+		if (playerBoardDrawServer.isCursorLocationAShipImage((int) mouseEvent.getX(), (int) mouseEvent.getY())) {
+			playerBoardDrawServer.setCursorLocationToEmpty((int) mouseEvent.getX(), (int) mouseEvent.getY());
+			playerBoardDrawServer.draw();
+		}
+		else {
+			if (playerBoardDrawServer.getTotalShipImages() < MAX_SHIPS) {
+				playerBoardDrawServer.setCursorLocationToShip((int) mouseEvent.getX(), (int) mouseEvent.getY());
+				playerBoardDrawServer.draw();
+			}
+		}
+		if (playerBoardDrawServer.getTotalShipImages() == MAX_SHIPS) {
+			startGameButton.setDisable(false);
+			notificationLabel.setText("You may now start the game!");
+		} else {
+			startGameButton.setDisable(true);
+			notificationLabel.setText("Please add " + (MAX_SHIPS - playerBoardDrawServer.getTotalShipImages()) + " more ships on the board.");
+		}
 	}
 	
 	//endregion
@@ -64,6 +81,7 @@ public class BoardController implements Initializable {
 		playerPane.heightProperty().addListener((observable, oldValue, newValue) -> updateBoard());
 		opponentPane.widthProperty().addListener((observable, oldValue, newValue) -> updateBoard());
 		playerPane.widthProperty().addListener((observable, oldValue, newValue) -> updateBoard());
+		notificationLabel.setText("Please add " + MAX_SHIPS + " more ships on the board.");
 	}
 	
 	private void updateBoard() {

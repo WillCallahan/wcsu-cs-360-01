@@ -55,6 +55,8 @@ public class BoardDrawService {
 		this.missImage = new Image(missImageUrl.toString());
 	}
 	
+	//region Drawing operations
+	
 	public void draw() {
 		pane.getChildren().clear();
 		populateGridImageList();
@@ -81,7 +83,7 @@ public class BoardDrawService {
 			for (int i = 0; i < numberOfHorizontalBoxes; i++) {
 				gridImageListCopy.add(new ArrayList<>());
 				for (int o = 0; o < numberOfVerticalBoxes; o++) {
-					if (i < gridImageList.size() && o < gridImageListCopy.get(i).size())
+					if (i < gridImageList.size() && o < gridImageList.get(i).size())
 						gridImageListCopy.get(i).add(gridImageList.get(i).get(o));
 					else
 						gridImageListCopy.get(i).add(null);
@@ -140,6 +142,14 @@ public class BoardDrawService {
 		}
 	}
 	
+	//endregion
+	
+	//region Vertical/Horizontal calculations
+	
+	private boolean isCoordinateXAndCoordinateYInGrid(int x, int y) {
+		return ((x - getHorizontalOffset()) < (getNumberOfHorizontalBoxes() * GRID_BOX_MIN_WIDTH_PIXELS) && (y - getVerticalOffset()) < (getNumberOfVerticalBoxes() * GRID_BOX_MIN_HEIGHT_PIXELS));
+	}
+	
 	private int getHorizontalOffset() {
 		if (centerBoard)
 			return (int) (pane.getWidth() % GRID_BOX_MIN_WIDTH_PIXELS) / 2;
@@ -159,5 +169,94 @@ public class BoardDrawService {
 	private int getNumberOfVerticalBoxes() {
 		return (int) pane.getHeight() / GRID_BOX_MIN_HEIGHT_PIXELS;
 	}
+	
+	private int getHorizontalGridLocationFromX(int x) {
+		return (x - getHorizontalOffset()) / GRID_BOX_MIN_WIDTH_PIXELS;
+	}
+	
+	private int getVerticalGridLocationFromY(int y) {
+		return (y - getVerticalOffset()) / GRID_BOX_MIN_HEIGHT_PIXELS;
+	}
+	
+	//endregion
+	
+	//region setCursorLocation
+	
+	public void setCursorLocationToEmpty(int x, int y) {
+		if (isCoordinateXAndCoordinateYInGrid(x, y))
+			gridImageList.get(getHorizontalGridLocationFromX(x)).set(getVerticalGridLocationFromY(y), emptyImage);
+	}
+	
+	public void setCursorLocationToShip(int x, int y) {
+		if (isCoordinateXAndCoordinateYInGrid(x, y))
+			gridImageList.get(getHorizontalGridLocationFromX(x)).set(getVerticalGridLocationFromY(y), shipImage);
+	}
+	
+	public void setCursorLocationToHit(int x, int y) {
+		if (isCoordinateXAndCoordinateYInGrid(x, y))
+			gridImageList.get(getHorizontalGridLocationFromX(x)).set(getVerticalGridLocationFromY(y), hitImage);
+	}
+	 
+	public void setCursorLocationToMiss(int x, int y) {
+		if (isCoordinateXAndCoordinateYInGrid(x, y))
+			gridImageList.get(getHorizontalGridLocationFromX(x)).set(getVerticalGridLocationFromY(y), missImage);
+	}
+	
+	//endregion
+	
+	//region getTotal
+	
+	private int getTotalOfImageInGridImageList(final Image image) {
+		int total = 0;
+		for (int i = 0; i < gridImageList.size(); i++) {
+			for (int o = 0; o < gridImageList.get(i).size(); o++) {
+				if (gridImageList.get(i).get(o) == image) //Using a reference comparison should be ok; image location never changed
+					total++;
+			}
+		}
+		return total;
+	}
+	
+	public int getTotalShipImages() {
+		return getTotalOfImageInGridImageList(shipImage);
+	}
+	
+	public int getTotalEmptyImages() {
+		return getTotalOfImageInGridImageList(shipImage);
+	}
+	
+	public int getTotalHitImages() {
+		return getTotalOfImageInGridImageList(shipImage);
+	}
+	
+	public int getTotalMissImages() {
+		return getTotalOfImageInGridImageList(shipImage);
+	}
+	
+	//endregion
+	
+	//region isCursorLocationAImage
+	
+	private boolean isCursorLocationAImage(int x, int y, final Image image) {
+		return isCoordinateXAndCoordinateYInGrid(x, y) && (gridImageList.get(getHorizontalGridLocationFromX(x)).get(getVerticalGridLocationFromY(y)) == image);
+	}
+	
+	public boolean isCursorLocationAShipImage(int x, int y) {
+		return isCursorLocationAImage(x, y, shipImage);
+	}
+	
+	public boolean isCursorLocationAEmptyImage(int x, int y) {
+		return isCursorLocationAImage(x, y, emptyImage);
+	}
+	
+	public boolean isCursorLocationAHitImage(int x, int y) {
+		return isCursorLocationAImage(x, y, hitImage);
+	}
+	
+	public boolean isCursorLocationAMissImage(int x, int y) {
+		return isCursorLocationAImage(x, y, missImage);
+	}
+	
+	//endregion
 	
 }
