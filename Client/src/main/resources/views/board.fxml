@@ -84,7 +84,7 @@
                               <Label layoutX="14.0" layoutY="14.0" text="Player Board" />
                            </children>
                         </Pane>
-                        <Pane fx:id="playerPane" GridPane.rowIndex="1" />
+                        <Pane fx:id="playerPane" onMouseClicked="#onPlayerPaneClicked" GridPane.rowIndex="1" />
                      </children>
                   </GridPane>
                </children>
