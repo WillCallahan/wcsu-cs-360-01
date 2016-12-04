@@ -1,6 +1,6 @@
 package edu.wcsu.cs360.battleship.client.controller;
 
-import edu.wcsu.cs360.battleship.client.service.ServerConnectionHandlerService;
+import edu.wcsu.cs360.battleship.client.service.io.ServerConnectionHandlerService;
 import edu.wcsu.cs360.battleship.client.service.canvas.BoardDrawService;
 import edu.wcsu.cs360.battleship.common.domain.singleton.ApplicationSession;
 import javafx.event.ActionEvent;
@@ -50,14 +50,13 @@ public class BoardController implements Initializable {
 	
 	public void onPlayerPaneClicked(MouseEvent mouseEvent) {
 		if (playerBoardDrawServer.isCursorLocationAShipImage((int) mouseEvent.getX(), (int) mouseEvent.getY())) {
+			//If the location is already a ship, clear it
 			playerBoardDrawServer.setCursorLocationToEmpty((int) mouseEvent.getX(), (int) mouseEvent.getY());
 			playerBoardDrawServer.draw();
-		}
-		else {
-			if (playerBoardDrawServer.getTotalShipImages() < MAX_SHIPS) {
-				playerBoardDrawServer.setCursorLocationToShip((int) mouseEvent.getX(), (int) mouseEvent.getY());
-				playerBoardDrawServer.draw();
-			}
+		} else if (playerBoardDrawServer.getTotalShipImages() < MAX_SHIPS) {
+			//Else, make the location a ship if the player has not added the max ships
+			playerBoardDrawServer.setCursorLocationToShip((int) mouseEvent.getX(), (int) mouseEvent.getY());
+			playerBoardDrawServer.draw();
 		}
 		if (playerBoardDrawServer.getTotalShipImages() == MAX_SHIPS) {
 			startGameButton.setDisable(false);

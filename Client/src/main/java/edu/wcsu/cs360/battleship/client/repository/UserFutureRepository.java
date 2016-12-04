@@ -1,6 +1,6 @@
 package edu.wcsu.cs360.battleship.client.repository;
 
-import edu.wcsu.cs360.battleship.client.service.ServerConnectionHandlerService;
+import edu.wcsu.cs360.battleship.client.service.io.ServerConnectionHandlerService;
 import edu.wcsu.cs360.battleship.common.domain.entity.User;
 import edu.wcsu.cs360.battleship.common.domain.enumeration.RequestMethod;
 import edu.wcsu.cs360.battleship.common.domain.socket.Request;

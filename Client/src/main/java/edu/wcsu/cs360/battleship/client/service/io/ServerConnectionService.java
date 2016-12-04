@@ -1,4 +1,4 @@
-package edu.wcsu.cs360.battleship.client.service;
+package edu.wcsu.cs360.battleship.client.service.io;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;

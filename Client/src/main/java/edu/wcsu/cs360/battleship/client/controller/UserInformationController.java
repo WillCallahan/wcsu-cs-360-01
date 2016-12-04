@@ -1,6 +1,6 @@
 package edu.wcsu.cs360.battleship.client.controller;
 
-import edu.wcsu.cs360.battleship.client.service.ServerConnectionHandlerService;
+import edu.wcsu.cs360.battleship.client.service.io.ServerConnectionHandlerService;
 import javafx.fxml.Initializable;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

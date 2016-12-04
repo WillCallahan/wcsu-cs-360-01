@@ -1,7 +1,8 @@
-package edu.wcsu.cs360.battleship.client.service;
+package edu.wcsu.cs360.battleship.client.service.io;
 
 import edu.wcsu.cs360.battleship.common.domain.socket.Request;
 import edu.wcsu.cs360.battleship.common.domain.socket.Response;
+import edu.wcsu.cs360.battleship.common.service.io.IConnectionSender;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -11,7 +12,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-public class ServerConnectionHandlerService {
+public class ServerConnectionHandlerService implements IConnectionSender<Request, Response> {
 	
 	private Log log = LogFactory.getLog(this.getClass());
 	private String address;
@@ -35,6 +36,10 @@ public class ServerConnectionHandlerService {
 		executorService.shutdownNow();
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public Future<Response> send(Request request) {
 		try {
 			ServerConnectionService<Request, Response> serverConnectionService = new ServerConnectionService<>(address, port, request, Request.class, Response.class);

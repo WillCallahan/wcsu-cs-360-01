@@ -26,6 +26,9 @@ public class ClientConnectionHandlerService implements IConnectionListenerServic
 		this.iDispatcher = iDispatcher;
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void accept(Socket socket) throws IOException {
 		ClientConnectionService clientConnectionService = new ClientConnectionService(socket, iDispatcher);
