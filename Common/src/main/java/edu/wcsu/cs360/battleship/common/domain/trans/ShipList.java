@@ -2,7 +2,7 @@ package edu.wcsu.cs360.battleship.common.domain.trans;
 
 import java.util.ArrayList;
 
-public class Shiplist {
+public class ShipList {
 
 	ArrayList<Ship> live;
 	
@@ -15,7 +15,7 @@ public class Shiplist {
 		return true;
 	}
 	
-	Shiplist(){
+	ShipList(){
 		live = new ArrayList<Ship>();
 	}
 	

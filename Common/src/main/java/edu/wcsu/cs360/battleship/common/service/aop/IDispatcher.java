@@ -13,6 +13,6 @@ public interface IDispatcher {
 	 * @param request Request from opposing system
 	 * @return Response of the Request
 	 */
-	Response dispatch(Request request);
+	Response dispatch(Request request, Object... knownObjects);
 
 }

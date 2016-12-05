@@ -1,17 +1,30 @@
 package edu.wcsu.cs360.battleship.common.domain.trans;
 
 public class Player {
-	private int ID;
-	Player(int ID){
-		this.ID=ID;
+	private int id;
+	private Board board = new Board();
+	
+	Player(int id) {
+		this.id = id;
 	}
 	
-	Boolean guess(){
-		
-		return false;	
+	public Boolean guess() {
+		return false;
 	}
 	
-	Board usrboard = new Board();
+	public int getId() {
+		return id;
+	}
 	
+	public void setId(int id) {
+		this.id = id;
+	}
 	
+	public Board getBoard() {
+		return board;
+	}
+	
+	public void setBoard(Board board) {
+		this.board = board;
+	}
 }

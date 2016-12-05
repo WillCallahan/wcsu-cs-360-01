@@ -36,7 +36,7 @@ public class DispatcherService implements IDispatcher {
 	}
 
 	@Override
-	public Response dispatch(Request request) {
+	public Response dispatch(Request request, Object... knownObjects) {
 		if (request == null)
 			throw new IllegalArgumentException();
 		log.info("Dispatching request " + request.toString());
@@ -51,7 +51,7 @@ public class DispatcherService implements IDispatcher {
 						try {
 							Object object = clazz.newInstance();
 							dependencyInjectionService.injectDependencies(object);
-							return (Response) method.invoke(object, getArguments(method, request, request.getBody()));
+							return (Response) method.invoke(object, getArguments(method, request, knownObjects, request.getBody()));
 						} catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
 							e.printStackTrace();
 							return new Response<>("", 500, "Error: " + e.getMessage(), null);

@@ -6,16 +6,16 @@ public class Board {
 	
 	private Tuple size;
 	
-	public boolean bad_table = false;
+	private boolean badTable = false;
 	
-	byte[][] brd;
+	private byte[][] brd;
 	
-	Shiplist shl;
+	private ShipList shl;
 	
-	Board() {
+	public Board() {
 		size = new Tuple(5, 5);
-		brd = new byte[size.x][size.y];
-		shl = new Shiplist();
+		brd = new byte[size.getX()][size.getY()];
+		shl = new ShipList();
 		
 		shl.add_ship(new Tuple(2, 2), new Tuple(2, 3), (byte) 0);
 		shl.add_ship(new Tuple(1, 3), new Tuple(3, 3), (byte) 1);
@@ -24,14 +24,13 @@ public class Board {
 		for (int i = 0; i < shl.live.size(); i++) {
 			place_ship(shl.live.get(i));
 		}
-		
 	}
 	
 	void print() {
 		System.out.print("R " + "0 " + "1 " + "2 " + "3 " + "4 " + "\n");//row numbers
-		for (int i = 0; i < size.y; i++) {
+		for (int i = 0; i < size.getY(); i++) {
 			System.out.print(i);
-			for (int j = 0; j < size.x; j++) {
+			for (int j = 0; j < size.getY(); j++) {
 				System.out.print(" ");// spacing for readability
 				System.out.print(brd[i][j]);
 			}
@@ -39,29 +38,29 @@ public class Board {
 		}
 	}
 	
-	public void place_ship(Ship toinsert) {
-		if (toinsert.start.x == toinsert.end.x) {
-			for (int i = 0; i <= toinsert.health; i++) {
-				if (brd[toinsert.start.y + i][toinsert.start.x] != 0) {
+	public void place_ship(Ship toInsert) {
+		if (toInsert.getEnd().getX() == toInsert.getEnd().getX()) {
+			for (int i = 0; i <= toInsert.getHealth(); i++) {
+				if (brd[toInsert.getEnd().getY() + i][toInsert.getEnd().getX()] != 0) {
 					System.out.print("error, ships overlapping\n");
-					bad_table = true; // this table should disqualify player
+					badTable = true; // this table should disqualify player
 				}
-				brd[toinsert.start.y + i][toinsert.start.x] = (byte) (toinsert.shipnum + 2);
+				brd[toInsert.getEnd().getY() + i][toInsert.getEnd().getX()] = (byte) (toInsert.getShipNum() + 2);
 			}
 		} else {
-			for (int i = 0; i <= toinsert.health; i++) {
-				if (brd[toinsert.start.y][toinsert.start.x + i] != 0) {
+			for (int i = 0; i <= toInsert.getHealth(); i++) {
+				if (brd[toInsert.getEnd().getY()][toInsert.getEnd().getX() + i] != 0) {
 					System.out.print("error, ships overlapping\n");
-					bad_table = true; // this table should disqualify player
+					badTable = true; // this table should disqualify player
 				}
-				brd[toinsert.start.y][toinsert.start.x + i] = (byte) (toinsert.shipnum + 2);
+				brd[toInsert.getEnd().getY()][toInsert.getEnd().getX() + i] = (byte) (toInsert.getShipNum() + 2);
 				
 			}
 			
 		}
 	}
 	
-	public boolean hit_loc(int x, int y) {
+	public boolean hitLocation(int x, int y) {
 		if (brd[x][y] == 0) {//location empty
 			brd[x][y] = 1;// missed guess
 			return false;// missed guess
@@ -80,5 +79,11 @@ public class Board {
 		return false;
 	}
 	
+	public boolean isBadTable() {
+		return badTable;
+	}
 	
+	public void setBadTable(boolean badTable) {
+		this.badTable = badTable;
+	}
 }
