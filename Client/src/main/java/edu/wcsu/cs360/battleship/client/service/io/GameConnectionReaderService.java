@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import edu.wcsu.cs360.battleship.common.domain.socket.Response;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -16,8 +15,9 @@ public class GameConnectionReaderService<T> extends Thread {
 	
 	private Log log = LogFactory.getLog(this.getClass());
 	private ObjectMapper objectMapper;
+	private Class<T> requestClass;
 	private InputStream inputStream;
-	private IGameConnectionCallback<Response> iGameConnectionCallback;
+	private IGameConnectionCallback<T> iGameConnectionCallback;
 	
 	private GameConnectionReaderService() {
 		inputStream = null;
@@ -27,23 +27,30 @@ public class GameConnectionReaderService<T> extends Thread {
 		objectMapper.configure(SerializationFeature.CLOSE_CLOSEABLE, false);
 	}
 	
-	public GameConnectionReaderService(Socket socket, IGameConnectionCallback<Response> iGameConnectionCallback) throws IOException {
+	public GameConnectionReaderService(Socket socket, IGameConnectionCallback<T> iGameConnectionCallback, Class<T> requestClass) throws IOException {
 		this();
 		inputStream = socket.getInputStream();
 		this.iGameConnectionCallback = iGameConnectionCallback;
+		this.requestClass = requestClass;
 	}
 	
-	public GameConnectionReaderService(InputStream inputStream, IGameConnectionCallback<Response> iGameConnectionCallback) {
+	public GameConnectionReaderService(InputStream inputStream, IGameConnectionCallback<T> iGameConnectionCallback, Class<T> requestClass) {
 		this();
 		this.inputStream = inputStream;
 		this.iGameConnectionCallback = iGameConnectionCallback;
+		this.requestClass = requestClass;
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void run() {
 		while (true) {
 			try {
-				Response response = objectMapper.readValue(inputStream, Response.class);
+				log.debug("Waiting for response from server...");
+				T response = objectMapper.readValue(inputStream, requestClass);
+				log.debug("Received response from server!");
 				iGameConnectionCallback.callback(response);
 			} catch (IOException e) {
 				log.error("Failed to process response!", e);

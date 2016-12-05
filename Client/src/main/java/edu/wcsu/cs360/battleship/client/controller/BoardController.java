@@ -1,8 +1,13 @@
 package edu.wcsu.cs360.battleship.client.controller;
 
+import edu.wcsu.cs360.battleship.client.service.io.GameConnectionHandlerService;
 import edu.wcsu.cs360.battleship.client.service.io.ServerConnectionHandlerService;
 import edu.wcsu.cs360.battleship.client.service.canvas.BoardDrawService;
 import edu.wcsu.cs360.battleship.common.domain.singleton.ApplicationSession;
+import edu.wcsu.cs360.battleship.common.domain.socket.Response;
+import edu.wcsu.cs360.battleship.common.domain.trans.Board;
+import edu.wcsu.cs360.battleship.common.service.serialize.ObjectMapperClassCastService;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -14,6 +19,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import javax.inject.Inject;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -29,6 +35,8 @@ public class BoardController implements Initializable {
 	private BoardDrawService opponentBoardDrawServer;
 	private BoardDrawService playerBoardDrawServer;
 	@Inject
+	private GameConnectionHandlerService gameConnectionHandlerService;
+	@Inject
 	private ApplicationSession applicationSession;
 	@Inject
 	private ServerConnectionHandlerService serverConnectionHandlerService;
@@ -36,12 +44,13 @@ public class BoardController implements Initializable {
 	public BoardController() {
 		opponentBoardDrawServer = null;
 		playerBoardDrawServer = null;
+		gameConnectionHandlerService = null;
 	}
 	
 	//region Button Event Handlers
 	
-	public void onStartGameButtonClick(ActionEvent actionEvent) {
-		
+	public void onStartGameButtonClick(ActionEvent actionEvent) throws IOException {
+		gameConnectionHandlerService.start(this::handleResponseFromServer);
 	}
 	
 	//endregion
@@ -68,6 +77,12 @@ public class BoardController implements Initializable {
 	}
 	
 	//endregion
+	
+	private void handleResponseFromServer(Response response) {
+		ObjectMapperClassCastService objectMapperClassCastService = new ObjectMapperClassCastService();
+		updateBoard();
+		objectMapperClassCastService.cast(response.getBody(), Board.class);
+	}
 	
 	/**
 	 * {@inheritDoc}

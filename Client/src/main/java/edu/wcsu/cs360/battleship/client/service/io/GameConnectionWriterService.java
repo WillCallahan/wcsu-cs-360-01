@@ -38,6 +38,9 @@ public class GameConnectionWriterService<T> extends Thread {
 		this.request = request;
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void run() {
 		try {

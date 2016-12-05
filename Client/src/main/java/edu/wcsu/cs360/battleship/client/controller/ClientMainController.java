@@ -3,6 +3,7 @@ package edu.wcsu.cs360.battleship.client.controller;
 import com.airhacks.afterburner.injection.Injector;
 import com.sun.javafx.css.StyleManager;
 import edu.wcsu.cs360.battleship.client.repository.UserFutureRepository;
+import edu.wcsu.cs360.battleship.client.service.io.GameConnectionHandlerService;
 import edu.wcsu.cs360.battleship.client.service.io.ServerConnectionHandlerService;
 import edu.wcsu.cs360.battleship.client.utility.general.ViewUtility;
 import edu.wcsu.cs360.battleship.client.utility.notification.AlertUtility;
@@ -27,6 +28,7 @@ public class ClientMainController extends Application {
 		ServerConnectionHandlerService serverConnectionHandlerService = new ServerConnectionHandlerService("localhost", 8000);
 		Injector.setModelOrService(ServerConnectionHandlerService.class, serverConnectionHandlerService);
 		Injector.setModelOrService(IUserFutureRepository.class, new UserFutureRepository(serverConnectionHandlerService));
+		Injector.setModelOrService(GameConnectionHandlerService.class, new GameConnectionHandlerService("localhost", 8010));
 		log.info("Successfully created dependency injection instances!");
 	}
 	
