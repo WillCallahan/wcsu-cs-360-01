@@ -2,14 +2,13 @@ package edu.wcsu.cs360.battleship.server.controller;
 
 import edu.wcsu.cs360.battleship.common.repository.IUserRepository;
 import edu.wcsu.cs360.battleship.common.repository.UserRepository;
-import edu.wcsu.cs360.battleship.common.service.di.DependencyInjectionService;
 import edu.wcsu.cs360.battleship.common.service.aop.DispatcherService;
 import edu.wcsu.cs360.battleship.common.service.aop.IDispatcher;
-import edu.wcsu.cs360.battleship.common.service.io.IConnectionListenerService;
+import edu.wcsu.cs360.battleship.common.service.di.DependencyInjectionService;
 import edu.wcsu.cs360.battleship.common.service.io.PropertyFileService;
 import edu.wcsu.cs360.battleship.server.service.ClientConnectionHandlerService;
+import edu.wcsu.cs360.battleship.server.service.GameConnectionServer;
 import edu.wcsu.cs360.battleship.server.service.StatelessConnectionServer;
-import edu.wcsu.cs360.battleship.server.service.IConnectionServer;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -19,19 +18,17 @@ import javax.persistence.Persistence;
 public class ServerMainController {
 	
 	private Log log = LogFactory.getLog(this.getClass());
-	private IDispatcher iDispatcher;
-	private DependencyInjectionService dependencyInjectionService;
-	private IConnectionServer iConnectionServer;
-	private IConnectionListenerService iConnectionListenerService;
+	private StatelessConnectionServer statelessConnectionServer;
+	private GameConnectionServer gameConnectionServer;
 	
 	public ServerMainController() {
 		PropertyFileService propertyFileService = new PropertyFileService("database.properties");
 		EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory(propertyFileService.getProperty("jpa.persistence.unit.name").toString());
-		dependencyInjectionService = new DependencyInjectionService();
+		DependencyInjectionService dependencyInjectionService = new DependencyInjectionService();
 		dependencyInjectionService.registerDependency(IUserRepository.class, new UserRepository(entityManagerFactory.createEntityManager()));
-		iDispatcher = new DispatcherService(dependencyInjectionService, GameController.class, AuthenticationController.class, UserApiController.class);
-		iConnectionListenerService = new ClientConnectionHandlerService(iDispatcher);
-		iConnectionServer = new StatelessConnectionServer(iConnectionListenerService);
+		IDispatcher iDispatcher = new DispatcherService(dependencyInjectionService, GameController.class, AuthenticationController.class, UserApiController.class);
+		statelessConnectionServer = new StatelessConnectionServer(new ClientConnectionHandlerService(iDispatcher));
+		gameConnectionServer = new GameConnectionServer(iDispatcher);
 	}
 	
 	public static void main(String args[]) {
@@ -41,7 +38,8 @@ public class ServerMainController {
 	
 	public void run() {
 		log.info("Starting application!");
-		iConnectionServer.run();
+		statelessConnectionServer.start();
+		gameConnectionServer.start();
 		log.info("Ending application!");
 	}
 	

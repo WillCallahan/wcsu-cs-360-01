@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * Creates a Game board using {@link javafx.scene.canvas.Canvas}
  */
-public class BoardDrawService {
+public class BattleshipBoardDrawService {
 	
 	private static final int GRID_BOX_MIN_HEIGHT_PIXELS = 50;
 	private static final int GRID_BOX_MIN_WIDTH_PIXELS = 50;
@@ -27,17 +27,17 @@ public class BoardDrawService {
 	private Image missImage;
 	
 	/**
-	 * Whether or not to center the board being drawn in the {@link BoardDrawService#pane}
+	 * Whether or not to center the board being drawn in the {@link BattleshipBoardDrawService#pane}
 	 */
 	private boolean centerBoard;
 	private Pane pane;
 	
-	private BoardDrawService() {
+	private BattleshipBoardDrawService() {
 		centerBoard = true;
 		gridImageList = null;
 	}
 	
-	public BoardDrawService(Pane pane, Image emptyImage, Image shipImage, Image hitImage, Image missImage) {
+	public BattleshipBoardDrawService(Pane pane, Image emptyImage, Image shipImage, Image hitImage, Image missImage) {
 		this();
 		this.pane = pane;
 		this.emptyImage = emptyImage;
@@ -46,7 +46,7 @@ public class BoardDrawService {
 		this.missImage = missImage;
 	}
 	
-	public BoardDrawService(Pane pane, URL emptyImageUrl, URL shipImageUrl, URL hitImageUrl, URL missImageUrl) {
+	public BattleshipBoardDrawService(Pane pane, URL emptyImageUrl, URL shipImageUrl, URL hitImageUrl, URL missImageUrl) {
 		this();
 		this.pane = pane;
 		this.emptyImage = new Image(emptyImageUrl.toString());

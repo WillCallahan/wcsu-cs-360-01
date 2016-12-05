@@ -5,6 +5,7 @@ import edu.wcsu.cs360.battleship.common.domain.socket.Response;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import javax.annotation.PreDestroy;
 import java.io.IOException;
 import java.net.Socket;
 
@@ -26,31 +27,32 @@ public class GameConnectionHandlerService {
 		this.port = port;
 	}
 	
-	public void stop() throws IOException {
-		if (socket != null && socket.isConnected()) {
-			log.info("Stopping game connection...");
+	@PreDestroy
+	public void preDestroy() throws IOException {
+		log.info("Stopping game connection...");
+		if (socket != null && socket.isConnected())
 			socket.close();
-		}
 		else
-			log.warn("Cannot stop game connection; connection already closed!");
+			log.debug("Game connection already closed!");
 	}
 	
-	public void start(IGameConnectionCallback<Response> iGameConnectionCallback) throws IOException {
-		if (socket == null) {
+	public void initialize() throws IOException {
+		if (socket == null || socket.isClosed()) {
 			log.info("Starting new game connection...");
 			socket = new Socket(address, port);
-			receive(iGameConnectionCallback);
 		}
-		else
-			log.warn("Cannot start new game connection; game already connceted!");
 	}
 	
-	private void receive(IGameConnectionCallback<Response> iGameConnectionCallback) throws IOException {
+	public void listen(IGameConnectionCallback<Response> iGameConnectionCallback) throws IOException {
+		if (socket == null || socket.isClosed())
+			throw new IllegalStateException("Cannot connect to socket; was the GameConnectionHandlerService#initialize called?");
 		GameConnectionReaderService<Response> gameConnectionReaderService = new GameConnectionReaderService<>(socket, iGameConnectionCallback, Response.class);
 		gameConnectionReaderService.start();
 	}
 	
 	public void send(Request request) throws IOException {
+		if (socket == null || socket.isClosed())
+			throw new IllegalStateException("Cannot connect to socket; was the GameConnectionHandlerService#initialize called?");
 		GameConnectionWriterService<Request> gameConnectionWriterService = new GameConnectionWriterService<>(socket, request);
 		gameConnectionWriterService.start();
 	}

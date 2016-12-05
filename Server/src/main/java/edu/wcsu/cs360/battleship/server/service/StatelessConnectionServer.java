@@ -8,7 +8,7 @@ import javax.net.ServerSocketFactory;
 import java.io.IOException;
 import java.net.ServerSocket;
 
-public class StatelessConnectionServer implements IConnectionServer {
+public class StatelessConnectionServer extends Thread implements IConnectionServer {
 
 	private Log log = LogFactory.getLog(this.getClass());
 	private ServerSocketFactory serverSocketFactory;

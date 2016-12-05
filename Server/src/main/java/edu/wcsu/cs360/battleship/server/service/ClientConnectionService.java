@@ -1,9 +1,11 @@
-package edu.wcsu.cs360.battleship.common.domain.socket;
+package edu.wcsu.cs360.battleship.server.service;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import edu.wcsu.cs360.battleship.common.domain.socket.Request;
+import edu.wcsu.cs360.battleship.common.domain.socket.Response;
 import edu.wcsu.cs360.battleship.common.service.aop.IDispatcher;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -32,6 +34,9 @@ public class ClientConnectionService extends Thread {
 		objectMapper.configure(SerializationFeature.CLOSE_CLOSEABLE, false);
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void run() {
 		super.run();
