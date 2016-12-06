@@ -6,36 +6,31 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import edu.wcsu.cs360.battleship.common.domain.socket.Request;
 import edu.wcsu.cs360.battleship.common.domain.socket.Response;
-import edu.wcsu.cs360.battleship.common.domain.trans.Game;
-import edu.wcsu.cs360.battleship.common.domain.trans.Player;
 import edu.wcsu.cs360.battleship.common.service.aop.IDispatcher;
-import edu.wcsu.cs360.battleship.server.domain.session.GameSession;
+import edu.wcsu.cs360.battleship.server.domain.session.PlayerSession;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import java.io.IOException;
-import java.io.OutputStream;
-import java.net.Socket;
 import java.util.List;
-import java.util.Map;
 
 public class ClientGameConnectionService extends Thread {
 	
 	private Log log = LogFactory.getLog(this.getClass());
 	private IDispatcher iDispatcher;
-	private GameSession gameSession;
-	private List<GameSession> gameSessionList;
+	private PlayerSession playerSession;
+	private List<PlayerSession> playerSessionList;
 	private ObjectMapper objectMapper;
 	
 	private ClientGameConnectionService() {
 		log.info("A client has connected to the server!");
 	}
 	
-	public ClientGameConnectionService(GameSession gameSession, List<GameSession> gameSessionList, IDispatcher iDispatcher) throws IOException {
+	public ClientGameConnectionService(PlayerSession playerSession, List<PlayerSession> playerSessionList, IDispatcher iDispatcher) throws IOException {
 		this();
-		this.gameSession = gameSession;
+		this.playerSession = playerSession;
 		this.iDispatcher = iDispatcher;
-		this.gameSessionList = gameSessionList;
+		this.playerSessionList = playerSessionList;
 		objectMapper = new ObjectMapper();
 		objectMapper.configure(JsonParser.Feature.AUTO_CLOSE_SOURCE, false);
 		objectMapper.configure(JsonGenerator.Feature.AUTO_CLOSE_TARGET, false);
@@ -49,22 +44,28 @@ public class ClientGameConnectionService extends Thread {
 	public void run() {
 		super.run();
 		try {
-			while (gameSession.getSocket().isConnected()) {
-				Request request = objectMapper.readValue(gameSession.getInputStream(), Request.class);
-				Response response = iDispatcher.dispatch(request);
+			while (playerSession.getSocket().isConnected()) {
+				Request request = objectMapper.readValue(playerSession.getInputStream(), Request.class);
+				Response response = iDispatcher.dispatch(request, playerSessionList, playerSession);
 				if (response == null)
 					response = new Response(200);
 				log.info("Sending response: " + response.toString());
-				for (GameSession gameSession : gameSessionList)
-					objectMapper.writeValue(gameSession.getOutputStream(), response);
+				try {
+					for (PlayerSession playerSession : playerSessionList) {
+						log.debug("Sending response to client " + playerSession.getPlayer().getId());
+						objectMapper.writeValue(playerSession.getOutputStream(), response);
+					}
+				} catch (IOException e) {
+					log.error("Failed to send response to client " + playerSession.getPlayer().getId());
+				}
 			}
-		} catch (IOException e) {
+		} catch (Exception e) {
 			log.error("Failed to process request!", e);
 		} finally {
 			try {
-				if (gameSession.getSocket().isConnected()) {
-					gameSession.getSocket().close();
-					gameSessionList.remove(gameSession);
+				if (playerSession.getSocket().isConnected()) {
+					playerSession.getSocket().close();
+					playerSessionList.remove(playerSession);
 				}
 			} catch (IOException e) {
 				log.error("Unable to close socket!", e);

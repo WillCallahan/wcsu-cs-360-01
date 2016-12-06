@@ -1,10 +1,14 @@
 package edu.wcsu.cs360.battleship.common.domain.trans;
 
 public class Player {
-	private int id;
+	private long id;
 	private Board board = new Board();
 	
-	Player(int id) {
+	private Player() {
+		
+	}
+	
+	public Player(long id) {
 		this.id = id;
 	}
 	
@@ -12,11 +16,11 @@ public class Player {
 		return false;
 	}
 	
-	public int getId() {
+	public long getId() {
 		return id;
 	}
 	
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 	

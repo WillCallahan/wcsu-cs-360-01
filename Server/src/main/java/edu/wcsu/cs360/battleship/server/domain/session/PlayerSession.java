@@ -7,18 +7,18 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 
-public class GameSession {
+public class PlayerSession {
 
 	private Socket socket;
 	private InputStream inputStream;
 	private OutputStream outputStream;
 	private Player player;
 
-	private GameSession() {
+	private PlayerSession() {
 
 	}
 
-	public GameSession(Socket socket, Player player) throws IOException {
+	public PlayerSession(Socket socket, Player player) throws IOException {
 		this();
 		this.socket = socket;
 		this.inputStream = socket.getInputStream();
@@ -36,6 +36,10 @@ public class GameSession {
 
 	public Player getPlayer() {
 		return player;
+	}
+	
+	public void setPlayer(Player player) {
+		this.player = player;
 	}
 
 	public Socket getSocket() {

@@ -47,7 +47,7 @@ public class GameConnectionWriterService<T> extends Thread {
 			log.info("Making request: " + request.toString());
 			objectMapper.writeValue(outputStream, request);
 		} catch (IOException e) {
-			throw new IllegalStateException("Unable to write to printWriter!", e);
+			throw new IllegalStateException("Unable to write to outputStream!", e);
 		} finally {
 			log.info("Closing socket");
 		}

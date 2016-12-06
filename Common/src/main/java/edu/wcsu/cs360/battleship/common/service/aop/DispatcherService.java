@@ -53,7 +53,7 @@ public class DispatcherService implements IDispatcher {
 							dependencyInjectionService.injectDependencies(object);
 							return (Response) method.invoke(object, getArguments(method, request, knownObjects, request.getBody()));
 						} catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
-							e.printStackTrace();
+							log.error("Unhandled error: ", e);
 							return new Response<>("", 500, "Error: " + e.getMessage(), null);
 						}
 					}
@@ -68,16 +68,18 @@ public class DispatcherService implements IDispatcher {
 		for (int i = 0; i < method.getParameterTypes().length; i++) {
 			log.trace("Searching for instances of " + method.getParameterTypes()[i]);
 			Object foundObject = null;
-			for (Object knownObject : knownObjects) {
-				if (method.getParameterTypes()[i] == knownObject.getClass()) {
-					foundObject = knownObject;
-					break;
+				for (Object knownObject : knownObjects) {
+					if (method.getParameterTypes()[i] == knownObject.getClass()) {
+						foundObject = knownObject;
+						break;
+					}
 				}
-			}
-			for (Object object : dependencyInjectionService.getDependencyList()) {
-				if (method.getParameterTypes()[i] == object.getClass()) {
-					foundObject = object;
-					break;
+			if (foundObject == null) {
+				for (Object object : dependencyInjectionService.getDependencyList()) {
+					if (method.getParameterTypes()[i] == object.getClass()) {
+						foundObject = object;
+						break;
+					}
 				}
 			}
 			if (foundObject == null)

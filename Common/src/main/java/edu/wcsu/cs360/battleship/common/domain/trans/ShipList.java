@@ -1,37 +1,35 @@
 package edu.wcsu.cs360.battleship.common.domain.trans;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ShipList {
-
-	ArrayList<Ship> live;
 	
-	boolean fleet_living() {
-		for (int i = 0; i < live.size(); i++) {
-			if (live.get(i).dead()) {
+	private List<Ship> liveShipList;
+	
+	public ShipList() {
+		liveShipList = new ArrayList<>();
+	}
+	
+	public boolean fleetLiving() {
+		for (int i = 0; i < liveShipList.size(); i++) {
+			if (liveShipList.get(i).dead()) {
 				return false; // fleet is dead
 			}
 		}
 		return true;
 	}
 	
-	ShipList(){
-		live = new ArrayList<Ship>();
+	public void addShip(Tuple start, Tuple end, byte shipNum) {
+		Ship tempShip = new Ship(start, end, shipNum);
+		liveShipList.add(tempShip);
 	}
 	
-	void add_ship(Tuple start, Tuple end, byte shipnum){
-		Ship tempship= new Ship(start, end,shipnum);
-		live.add(tempship);
-		
+	public List<Ship> getLiveShipList() {
+		return liveShipList;
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	public void setLiveShipList(List<Ship> liveShipList) {
+		this.liveShipList = liveShipList;
+	}
 }

@@ -54,7 +54,7 @@ public class ServerConnectionService<T, U> implements Callable<U> {
 			log.info("Received response: " + response.toString());
 			return response;
 		} catch (IOException e) {
-			throw new IllegalStateException("Unable to write to printWriter!", e);
+			throw new IllegalStateException("Unable to write to outputStream!", e);
 		} finally {
 			log.info("Closing socket");
 			try {

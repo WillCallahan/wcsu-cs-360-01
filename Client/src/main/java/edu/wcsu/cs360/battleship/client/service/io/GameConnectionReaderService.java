@@ -7,8 +7,10 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.Socket;
 
 public class GameConnectionReaderService<T> extends Thread {
@@ -16,6 +18,7 @@ public class GameConnectionReaderService<T> extends Thread {
 	private Log log = LogFactory.getLog(this.getClass());
 	private ObjectMapper objectMapper;
 	private Class<T> requestClass;
+	private BufferedReader bufferedReader;
 	private InputStream inputStream;
 	private IGameConnectionCallback<T> iGameConnectionCallback;
 	
@@ -29,13 +32,15 @@ public class GameConnectionReaderService<T> extends Thread {
 	
 	public GameConnectionReaderService(Socket socket, IGameConnectionCallback<T> iGameConnectionCallback, Class<T> requestClass) throws IOException {
 		this();
-		inputStream = socket.getInputStream();
+		this.inputStream = socket.getInputStream();
+		this.bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
 		this.iGameConnectionCallback = iGameConnectionCallback;
 		this.requestClass = requestClass;
 	}
 	
 	public GameConnectionReaderService(InputStream inputStream, IGameConnectionCallback<T> iGameConnectionCallback, Class<T> requestClass) {
 		this();
+		this.bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
 		this.inputStream = inputStream;
 		this.iGameConnectionCallback = iGameConnectionCallback;
 		this.requestClass = requestClass;
@@ -49,11 +54,14 @@ public class GameConnectionReaderService<T> extends Thread {
 		while (true) {
 			try {
 				log.debug("Waiting for response from server...");
-				T response = objectMapper.readValue(inputStream, requestClass);
+				String responseString = bufferedReader.readLine();
+				log.info("Response: " + responseString);
+				T response = objectMapper.readValue(responseString, requestClass);
 				log.debug("Received response from server!");
 				iGameConnectionCallback.callback(response);
 			} catch (IOException e) {
 				log.error("Failed to process response!", e);
+				break;
 			}
 		}
 	}

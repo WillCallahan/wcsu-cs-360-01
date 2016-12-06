@@ -3,9 +3,13 @@ package edu.wcsu.cs360.battleship.client.controller;
 import edu.wcsu.cs360.battleship.client.service.general.BattleshipGameBoardDrawService;
 import edu.wcsu.cs360.battleship.client.service.io.GameConnectionHandlerService;
 import edu.wcsu.cs360.battleship.client.service.io.ServerConnectionHandlerService;
+import edu.wcsu.cs360.battleship.common.domain.enumeration.RequestMethod;
 import edu.wcsu.cs360.battleship.common.domain.singleton.ApplicationSession;
+import edu.wcsu.cs360.battleship.common.domain.socket.Request;
 import edu.wcsu.cs360.battleship.common.domain.socket.Response;
 import edu.wcsu.cs360.battleship.common.domain.trans.Board;
+import edu.wcsu.cs360.battleship.common.domain.trans.Game;
+import edu.wcsu.cs360.battleship.common.domain.trans.Player;
 import edu.wcsu.cs360.battleship.common.service.serialize.ObjectMapperClassCastService;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -26,6 +30,7 @@ public class BoardController implements Initializable {
 	
 	private Log log = LogFactory.getLog(this.getClass());
 	private BattleshipGameBoardDrawService battleshipGameBoardDrawService;
+	private Game game;
 	@Inject
 	private GameConnectionHandlerService gameConnectionHandlerService;
 	@Inject
@@ -35,6 +40,7 @@ public class BoardController implements Initializable {
 	
 	public BoardController() throws IOException {
 		gameConnectionHandlerService = null;
+		game = new Game();
 	}
 	
 	//region Button Event Handlers
@@ -42,6 +48,12 @@ public class BoardController implements Initializable {
 	public void onStartGameButtonClick(ActionEvent actionEvent) throws IOException {
 		gameConnectionHandlerService.initialize();
 		gameConnectionHandlerService.listen(this::handleResponseFromServer);
+		Request<Player> gameRequest = new Request<>();
+		gameRequest.setMethod(RequestMethod.POST);
+		gameRequest.setBody(game.getPlayerById(applicationSession.getUser().getUserId()));
+		gameRequest.setTarget("gameController.updatePlayerBoard");
+		gameConnectionHandlerService.send(gameRequest);
+		startGameButton.setDisable(true);
 	}
 	
 	//endregion
@@ -73,6 +85,7 @@ public class BoardController implements Initializable {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		log.info("Initializing " + getClass());
+		game.getPlayerList().add(new Player(applicationSession.getUser().getUserId()));
 		battleshipGameBoardDrawService = new BattleshipGameBoardDrawService(playerPane, opponentPane, Board.MAX_SHIPS);
 		notificationLabel.setText("Please add " + Board.MAX_SHIPS + " more ships to the board.");
 	}
