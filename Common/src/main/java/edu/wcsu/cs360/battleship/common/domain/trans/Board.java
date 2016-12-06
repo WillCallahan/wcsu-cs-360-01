@@ -22,7 +22,7 @@ public class Board {
 		
 		//System.out.println(shl.live.size());
 		for (int i = 0; i < shl.live.size(); i++) {
-			place_ship(shl.live.get(i));
+			placeShip(shl.live.get(i));
 		}
 	}
 	
@@ -38,7 +38,7 @@ public class Board {
 		}
 	}
 	
-	public void place_ship(Ship toInsert) {
+	public void placeShip(Ship toInsert) {
 		if (toInsert.getEnd().getX() == toInsert.getEnd().getX()) {
 			for (int i = 0; i <= toInsert.getHealth(); i++) {
 				if (brd[toInsert.getEnd().getY() + i][toInsert.getEnd().getX()] != 0) {
