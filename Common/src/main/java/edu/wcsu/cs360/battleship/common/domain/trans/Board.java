@@ -18,7 +18,7 @@ public class Board {
 	private byte[][] board;
 	
 	private ShipList shipList;
-		
+	
 	private Board() {
 		
 	}
@@ -27,7 +27,7 @@ public class Board {
 		this.size = size;
 		board = new byte[size.getX()][size.getY()];
 		shipList = new ShipList();
-		
+
 //		shipList.addShip(new Tuple(2, 2), new Tuple(2, 3), (byte) 0);
 //		shipList.addShip(new Tuple(1, 3), new Tuple(3, 3), (byte) 1);
 //
@@ -83,7 +83,7 @@ public class Board {
 		}
 		
 		if (board[x][y] > 1) {//location occupied, ship number= loc number-2.
-			shipList.getLiveShipList().get(board[x][y] - 2).damage();//decrement ship health by 1.
+			shipList.getByStartTuple(new Tuple(x, y)).damage();//decrement ship health by 1.
 			board[x][y] = 1;
 			
 			return true;// hit guess

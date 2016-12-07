@@ -121,6 +121,7 @@ public class BoardController implements Initializable {
 			ObjectMapperClassCastService objectMapperClassCastService = new ObjectMapperClassCastService();
 			this.game = objectMapperClassCastService.cast(response.getBody(), Game.class);
 			updateGameBoard(game);
+			//TODO Check if there is a winner
 			if (game.getPlayerList().get(game.getCurrentPlayerTurnIndex()).getId() == applicationSession.getUser().getUserId()) { //Its my turn
 				notificationLabel.setText("It's you turn!");
 				opponentPane.setDisable(false);
@@ -139,20 +140,25 @@ public class BoardController implements Initializable {
 		if (opponentList.size() > 0)
 			opponent = opponentList.get(0);
 		if (player != null)
-			updateBoard(battleshipGameBoardDrawService.getPlayerBattleshipBoardDrawService(), player);
+			updateBoard(battleshipGameBoardDrawService.getPlayerBattleshipBoardDrawService(), player, false);
 		if (opponent != null)
-			updateBoard(battleshipGameBoardDrawService.getOpponentBattleshipBoardDrawService(), opponent);
+			updateBoard(battleshipGameBoardDrawService.getOpponentBattleshipBoardDrawService(), opponent, true);
 	}
 	
-	private void updateBoard(BattleshipBoardDrawService battleshipBoardDrawService, Player player) {
+	private void updateBoard(BattleshipBoardDrawService battleshipBoardDrawService, Player player, boolean isOpponent) {
 		for (int i = 0; i < player.getBoard().getBoard().length; i++) {
 			for (int o = 0; o < player.getBoard().getBoard()[i].length; o++) {
 				if (player.getBoard().getBoard()[i][o] < 0) {
-					battleshipBoardDrawService.setLocationToMiss(i, o);
+					battleshipBoardDrawService.setLocationToEmpty(i, o);
 				} else if (player.getBoard().getBoard()[i][o] == 0) {
 					battleshipBoardDrawService.setLocationToEmpty(i, o);
-				} else if (player.getBoard().getBoard()[i][o] > 0) {
-					battleshipBoardDrawService.setCursorLocationToShip(i, o);
+				} else if (player.getBoard().getBoard()[i][o] == 1) {
+					if (player.getBoard().getShipList().getByStartTuple(new Tuple(i, o)) == null)
+						battleshipBoardDrawService.setLocationToMiss(i, o);
+					else
+						battleshipBoardDrawService.setLocationToHit(i, o);
+				} else if (!isOpponent && player.getBoard().getBoard()[i][o] > 1) {
+					battleshipBoardDrawService.setLocationToShip(i, o);
 				}
 			}
 		}

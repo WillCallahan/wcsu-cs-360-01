@@ -14,7 +14,7 @@ public class Ship {
 		this.start = start;
 		this.end = end;
 		
-		health = start.size(end);// health is implied on the size of the ship
+		health = start.size(end) + 1;// health is implied on the size of the ship
 	}
 	
 	public boolean dead() {
