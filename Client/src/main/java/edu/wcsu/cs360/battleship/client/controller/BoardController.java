@@ -1,5 +1,6 @@
 package edu.wcsu.cs360.battleship.client.controller;
 
+import edu.wcsu.cs360.battleship.client.service.canvas.BattleshipBoardDrawService;
 import edu.wcsu.cs360.battleship.client.service.general.BattleshipGameBoardDrawService;
 import edu.wcsu.cs360.battleship.client.service.io.GameConnectionHandlerService;
 import edu.wcsu.cs360.battleship.client.service.io.ServerConnectionHandlerService;
@@ -7,10 +8,7 @@ import edu.wcsu.cs360.battleship.common.domain.enumeration.RequestMethod;
 import edu.wcsu.cs360.battleship.common.domain.singleton.ApplicationSession;
 import edu.wcsu.cs360.battleship.common.domain.socket.Request;
 import edu.wcsu.cs360.battleship.common.domain.socket.Response;
-import edu.wcsu.cs360.battleship.common.domain.trans.Board;
-import edu.wcsu.cs360.battleship.common.domain.trans.Game;
-import edu.wcsu.cs360.battleship.common.domain.trans.Player;
-import edu.wcsu.cs360.battleship.common.domain.trans.Tuple;
+import edu.wcsu.cs360.battleship.common.domain.trans.*;
 import edu.wcsu.cs360.battleship.common.service.serialize.ObjectMapperClassCastService;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -26,6 +24,7 @@ import org.apache.commons.logging.LogFactory;
 import javax.inject.Inject;
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class BoardController implements Initializable {
@@ -51,9 +50,14 @@ public class BoardController implements Initializable {
 	public void onStartGameButtonClick(ActionEvent actionEvent) throws IOException {
 		gameConnectionHandlerService.initialize();
 		gameConnectionHandlerService.listen(this::handleResponseFromServer);
+		
+		Player player = game.getPlayerById(applicationSession.getUser().getUserId());
+		player.setBoard(new Board(new Tuple(battleshipGameBoardDrawService.getPlayerBattleshipBoardDrawService().getNumberOfHorizontalBoxes(), battleshipGameBoardDrawService.getPlayerBattleshipBoardDrawService().getNumberOfVerticalBoxes())));
+		setBoard(battleshipGameBoardDrawService.getPlayerBattleshipBoardDrawService(), player.getBoard());
+		
 		Request<Player> gameRequest = new Request<>();
 		gameRequest.setMethod(RequestMethod.POST);
-		gameRequest.setBody(game.getPlayerById(applicationSession.getUser().getUserId()));
+		gameRequest.setBody(player);
 		gameRequest.setTarget("gameController.updatePlayerBoard");
 		gameConnectionHandlerService.send(gameRequest);
 		startGameButton.setDisable(true);
@@ -77,15 +81,76 @@ public class BoardController implements Initializable {
 		}
 	}
 	
+	public void onOpponentPaneClicked(MouseEvent mouseEvent) throws IOException {
+		if (gameStarted) {
+			//FIXME This does not handle more than two players
+			Player opponent = game.getOpponentList(applicationSession.getUser().getUserId()).get(0);
+			opponent.getBoard().hitLocation(
+					battleshipGameBoardDrawService.getOpponentBattleshipBoardDrawService().getHorizontalGridLocationFromX((int) mouseEvent.getX()),
+					battleshipGameBoardDrawService.getOpponentBattleshipBoardDrawService().getVerticalGridLocationFromY((int) mouseEvent.getY())
+			);
+			Request<Game> gameRequest = new Request<>();
+			gameRequest.setMethod(RequestMethod.POST);
+			gameRequest.setBody(game);
+			gameRequest.setTarget("gameController.makeMove");
+			gameConnectionHandlerService.send(gameRequest);
+		}
+	}
+	
 	//endregion
 	
 	private void handleResponseFromServer(Response response) {
-		ObjectMapperClassCastService objectMapperClassCastService = new ObjectMapperClassCastService();
 		Platform.runLater(() -> {
-			if (response.getMessage() != null)
-				notificationLabel.setText(response.getMessage());
+			ObjectMapperClassCastService objectMapperClassCastService = new ObjectMapperClassCastService();
+			this.game = objectMapperClassCastService.cast(response.getBody(), Game.class);
+			updateGameBoard(game);
+			if (game.getPlayerList().get(game.getCurrentPlayerTurnIndex()).getId() == applicationSession.getUser().getUserId()) { //Its my turn
+				notificationLabel.setText("It's you turn!");
+				opponentPane.setDisable(false);
+			} else {
+				notificationLabel.setText("Its the other player's turn.");
+				opponentPane.setDisable(true);
+			}
 		});
-		objectMapperClassCastService.cast(response.getBody(), Game.class);
+	}
+	
+	private void updateGameBoard(Game game) {
+		this.game.setPlayerList(game.getPlayerList());
+		Player player = game.getPlayerById(applicationSession.getUser().getUserId());
+		Player opponent = null;
+		List<Player> opponentList = game.getOpponentList(applicationSession.getUser().getUserId());
+		if (opponentList.size() > 0)
+			opponent = opponentList.get(0);
+		if (player != null)
+			updateBoard(battleshipGameBoardDrawService.getPlayerBattleshipBoardDrawService(), player);
+		if (opponent != null)
+			updateBoard(battleshipGameBoardDrawService.getOpponentBattleshipBoardDrawService(), opponent);
+	}
+	
+	private void updateBoard(BattleshipBoardDrawService battleshipBoardDrawService, Player player) {
+		for (int i = 0; i < player.getBoard().getBoard().length; i++) {
+			for (int o = 0; o < player.getBoard().getBoard()[i].length; o++) {
+				if (player.getBoard().getBoard()[i][o] < 0) {
+					battleshipBoardDrawService.setLocationToMiss(i, o);
+				} else if (player.getBoard().getBoard()[i][o] == 0) {
+					battleshipBoardDrawService.setLocationToEmpty(i, o);
+				} else if (player.getBoard().getBoard()[i][o] > 0) {
+					battleshipBoardDrawService.setCursorLocationToShip(i, o);
+				}
+			}
+		}
+		battleshipBoardDrawService.draw();
+	}
+	
+	private void setBoard(BattleshipBoardDrawService battleshipBoardDrawService, Board board) {
+		for (int i = 0; i < battleshipBoardDrawService.getNumberOfHorizontalBoxes(); i++) {
+			for (int o = 0; o < battleshipBoardDrawService.getNumberOfVerticalBoxes(); o++) {
+				if (battleshipBoardDrawService.isLocationAShipImage(i, o)) {
+					board.getShipList().addShip(new Tuple(i, o), new Tuple(i, o), (byte) (i + o));
+					board.placeShip(new Ship(new Tuple(i, o), new Tuple(i, o), (byte) (i + o)));
+				}
+			}
+		}
 	}
 	
 	/**
@@ -97,7 +162,6 @@ public class BoardController implements Initializable {
 		battleshipGameBoardDrawService = new BattleshipGameBoardDrawService(playerPane, opponentPane, Board.MAX_SHIPS);
 		notificationLabel.setText("Please add " + Board.MAX_SHIPS + " more ships to the board.");
 		Player player = new Player(applicationSession.getUser().getUserId());
-		player.setBoard(new Board(new Tuple(battleshipGameBoardDrawService.getPlayerBattleshipBoardDrawService().getNumberOfHorizontalBoxes(), battleshipGameBoardDrawService.getPlayerBattleshipBoardDrawService().getNumberOfVerticalBoxes())));
 		game.getPlayerList().add(player);
 	}
 	

@@ -25,8 +25,10 @@ public class GameController {
 	private IUserRepository iUserRepository;
 	
 	@Mapping(requestMethod = RequestMethod.GET)
-	public void makeMove(Request<Game> request, Game game) {
-		
+	public Response<Game> makeMove(Request<Game> request, Game game) {
+		game.setPlayerList(request.getBody().getPlayerList());
+		game.setCurrentPlayerTurnToNext();
+		return new Response<>(game);
 	}
 	
 	@Mapping(requestMethod = RequestMethod.POST)

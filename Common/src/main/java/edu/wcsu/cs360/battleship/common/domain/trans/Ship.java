@@ -5,6 +5,10 @@ public class Ship {
 	private byte shipNum;
 	private int health;
 	
+	private Ship() {
+		
+	}
+	
 	public Ship(Tuple start, Tuple end, byte num) {
 		shipNum = num;
 		this.start = start;

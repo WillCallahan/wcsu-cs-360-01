@@ -22,12 +22,13 @@ public class Game implements Serializable {
 		return playerList;
 	}
 	
-	public int getCurrentPlayerTurnIndex() {
-		return currentPlayerTurnIndex;
+	@JsonIgnore
+	public void setCurrentPlayerTurnToNext() {
+		currentPlayerTurnIndex++;
 	}
 	
-	public void setCurrentPlayerTurnIndex(int currentPlayerTurnIndex) {
-		this.currentPlayerTurnIndex = currentPlayerTurnIndex;
+	public int getCurrentPlayerTurnIndex() {
+		return this.currentPlayerTurnIndex % playerList.size();
 	}
 	
 	@JsonIgnore
@@ -37,6 +38,22 @@ public class Game implements Serializable {
 				return player;
 		}
 		throw new IllegalArgumentException("Invalid Player Id; Id not found in playerList!");
+	}
+	
+	/**
+	 * Gets the opponent of the {@link Player} with a matching {@link Player#id}
+	 *
+	 * @param id Id of the current player
+	 * @return Opponents of the {@link Player} with a matching {@link Player#id}
+	 */
+	@JsonIgnore
+	public List<Player> getOpponentList(long id) {
+		List<Player> opponentList = new ArrayList<>();
+		for (Player player : this.playerList) {
+			if (player.getId() != id)
+				opponentList.add(player);
+		}
+		return opponentList;
 	}
 	
 	public void setPlayerList(List<Player> playerList) {

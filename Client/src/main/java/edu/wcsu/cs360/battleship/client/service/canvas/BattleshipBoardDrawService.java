@@ -170,11 +170,11 @@ public class BattleshipBoardDrawService {
 		return (int) pane.getHeight() / GRID_BOX_MIN_HEIGHT_PIXELS;
 	}
 	
-	private int getHorizontalGridLocationFromX(int x) {
+	public int getHorizontalGridLocationFromX(int x) {
 		return (x - getHorizontalOffset()) / GRID_BOX_MIN_WIDTH_PIXELS;
 	}
 	
-	private int getVerticalGridLocationFromY(int y) {
+	public int getVerticalGridLocationFromY(int y) {
 		return (y - getVerticalOffset()) / GRID_BOX_MIN_HEIGHT_PIXELS;
 	}
 	
@@ -196,10 +196,30 @@ public class BattleshipBoardDrawService {
 		if (isCoordinateXAndCoordinateYInGrid(x, y))
 			gridImageList.get(getHorizontalGridLocationFromX(x)).set(getVerticalGridLocationFromY(y), hitImage);
 	}
-	 
+	
 	public void setCursorLocationToMiss(int x, int y) {
 		if (isCoordinateXAndCoordinateYInGrid(x, y))
 			gridImageList.get(getHorizontalGridLocationFromX(x)).set(getVerticalGridLocationFromY(y), missImage);
+	}
+	
+	//endregion
+	
+	//region setLocation
+	
+	public void setLocationToEmpty(int x, int y) {
+		gridImageList.get(x).set(y, emptyImage);
+	}
+	
+	public void setLocationToShip(int x, int y) {
+		gridImageList.get(x).set(y, shipImage);
+	}
+	
+	public void setLocationToHit(int x, int y) {
+		gridImageList.get(x).set(y, hitImage);
+	}
+	
+	public void setLocationToMiss(int x, int y) {
+		gridImageList.get(x).set(y, missImage);
 	}
 	
 	//endregion
@@ -231,6 +251,30 @@ public class BattleshipBoardDrawService {
 	
 	public int getTotalMissImages() {
 		return getTotalOfImageInGridImageList(shipImage);
+	}
+	
+	//endregion
+	
+	//region isLocationAImage
+	
+	private boolean isLocationAImage(int x, int y, final Image image) {
+		return (gridImageList.get(x).get(y) == image);
+	}
+	
+	public boolean isLocationAShipImage(int x, int y) {
+		return isLocationAImage(x, y, shipImage);
+	}
+	
+	public boolean isLocationAEmptyImage(int x, int y) {
+		return isLocationAImage(x, y, emptyImage);
+	}
+	
+	public boolean isLocationAHitImage(int x, int y) {
+		return isLocationAImage(x, y, hitImage);
+	}
+	
+	public boolean isLocationAMissImage(int x, int y) {
+		return isLocationAImage(x, y, missImage);
 	}
 	
 	//endregion
