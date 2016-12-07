@@ -29,7 +29,7 @@ public class GameController {
 	}
 	
 	@Mapping(requestMethod = RequestMethod.POST)
-	public Response<Game> updatePlayerBoard(Request<Player> playerRequest, List<PlayerSession> playerSessionsList, PlayerSession playerSession) {
+	public Response<Game> updatePlayerBoard(Request<Player> playerRequest, PlayerSession playerSession) {
 		if (playerSession.getPlayer() == null)
 			playerSession.setPlayer(playerRequest.getBody());
 		if (playerSession.getPlayer().getId() != playerRequest.getBody().getId())

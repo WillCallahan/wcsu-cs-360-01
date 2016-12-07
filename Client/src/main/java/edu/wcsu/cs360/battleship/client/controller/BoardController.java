@@ -76,6 +76,7 @@ public class BoardController implements Initializable {
 	private void handleResponseFromServer(Response response) {
 		ObjectMapperClassCastService objectMapperClassCastService = new ObjectMapperClassCastService();
 		//TODO Draw board
+		log.info("I just got called");
 		objectMapperClassCastService.cast(response.getBody(), Board.class);
 	}
 	

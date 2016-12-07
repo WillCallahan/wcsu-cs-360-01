@@ -18,7 +18,6 @@ public class GameConnectionReaderService<T> extends Thread {
 	private Log log = LogFactory.getLog(this.getClass());
 	private ObjectMapper objectMapper;
 	private Class<T> requestClass;
-	private BufferedReader bufferedReader;
 	private InputStream inputStream;
 	private IGameConnectionCallback<T> iGameConnectionCallback;
 	
@@ -33,14 +32,12 @@ public class GameConnectionReaderService<T> extends Thread {
 	public GameConnectionReaderService(Socket socket, IGameConnectionCallback<T> iGameConnectionCallback, Class<T> requestClass) throws IOException {
 		this();
 		this.inputStream = socket.getInputStream();
-		this.bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
 		this.iGameConnectionCallback = iGameConnectionCallback;
 		this.requestClass = requestClass;
 	}
 	
 	public GameConnectionReaderService(InputStream inputStream, IGameConnectionCallback<T> iGameConnectionCallback, Class<T> requestClass) {
 		this();
-		this.bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
 		this.inputStream = inputStream;
 		this.iGameConnectionCallback = iGameConnectionCallback;
 		this.requestClass = requestClass;
@@ -54,9 +51,7 @@ public class GameConnectionReaderService<T> extends Thread {
 		while (true) {
 			try {
 				log.debug("Waiting for response from server...");
-				String responseString = bufferedReader.readLine();
-				log.info("Response: " + responseString);
-				T response = objectMapper.readValue(responseString, requestClass);
+				T response = objectMapper.readValue(inputStream, requestClass);
 				log.debug("Received response from server!");
 				iGameConnectionCallback.callback(response);
 			} catch (IOException e) {

@@ -5,6 +5,7 @@ import edu.wcsu.cs360.battleship.common.domain.socket.Response;
 import edu.wcsu.cs360.battleship.common.service.di.DependencyInjectionService;
 import edu.wcsu.cs360.battleship.common.service.serialize.IClassCastService;
 import edu.wcsu.cs360.battleship.common.service.serialize.ObjectMapperClassCastService;
+import edu.wcsu.cs360.battleship.common.utility.ArrayUtility;
 import edu.wcsu.cs360.battleship.common.utility.ReflectionUtility;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -24,8 +25,9 @@ public class DispatcherService implements IDispatcher {
 	
 	/**
 	 * Constructor
+	 *
 	 * @param dependencyInjectionService Dependency Injection Service containing require resolutions to dependencies
-	 * @param controllerArray Classes to invoke and inject dependencies into upon request
+	 * @param controllerArray            Classes to invoke and inject dependencies into upon request
 	 */
 	public DispatcherService(DependencyInjectionService dependencyInjectionService, Class... controllerArray) {
 		this.dependencyInjectionService = dependencyInjectionService;
@@ -34,7 +36,7 @@ public class DispatcherService implements IDispatcher {
 		this.iClassCastServicesList = new ArrayList<>();
 		this.iClassCastServicesList.add(new ObjectMapperClassCastService());
 	}
-
+	
 	@Override
 	public Response dispatch(Request request, Object... knownObjects) {
 		if (request == null)
@@ -51,7 +53,10 @@ public class DispatcherService implements IDispatcher {
 						try {
 							Object object = clazz.newInstance();
 							dependencyInjectionService.injectDependencies(object);
-							return (Response) method.invoke(object, getArguments(method, request, knownObjects, request.getBody()));
+							Object[] arguments = knownObjects;
+							arguments = ArrayUtility.merge(request, Object.class, arguments);
+							arguments = ArrayUtility.merge(request.getBody(), Object.class, arguments);
+							return (Response) method.invoke(object, getArguments(method, arguments));
 						} catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
 							log.error("Unhandled error: ", e);
 							return new Response<>("", 500, "Error: " + e.getMessage(), null);
@@ -68,12 +73,12 @@ public class DispatcherService implements IDispatcher {
 		for (int i = 0; i < method.getParameterTypes().length; i++) {
 			log.trace("Searching for instances of " + method.getParameterTypes()[i]);
 			Object foundObject = null;
-				for (Object knownObject : knownObjects) {
-					if (method.getParameterTypes()[i] == knownObject.getClass()) {
-						foundObject = knownObject;
-						break;
-					}
+			for (Object knownObject : knownObjects) {
+				if (method.getParameterTypes()[i] == knownObject.getClass()) {
+					foundObject = knownObject;
+					break;
 				}
+			}
 			if (foundObject == null) {
 				for (Object object : dependencyInjectionService.getDependencyList()) {
 					if (method.getParameterTypes()[i] == object.getClass()) {
@@ -91,15 +96,15 @@ public class DispatcherService implements IDispatcher {
 		}
 		return objectList.toArray();
 	}
-
+	
 	@SuppressWarnings("unchecked")
 	protected void tryCastRequestType(Method method, Request request) {
-		Class<?> clazz = ReflectionUtility.getFirstClassOfMethodParametersByIsNotClass(method, Request.class);
-		if (clazz == null) {
-			List<Class<?>> classList = ReflectionUtility.getClassListOfGenericTypeInMethodGenericParameterTypes(method, Request.class);
-			if (classList != null)
-				clazz = classList.get(0);
-		}
+		Class<?> clazz = null;
+		List<Class<?>> classList = ReflectionUtility.getClassListOfGenericTypeInMethodGenericParameterTypes(method, Request.class);
+		if (classList != null)
+			clazz = classList.get(0);
+		if (clazz == null)
+			clazz = ReflectionUtility.getFirstClassOfMethodParametersByIsNotClass(method, Request.class);
 		if (clazz != null) {
 			log.debug("Object class of Request body: " + clazz);
 			for (IClassCastService iClassCastService : iClassCastServicesList) {
@@ -110,9 +115,8 @@ public class DispatcherService implements IDispatcher {
 					log.debug("Unable to cast request object body to " + clazz, e);
 				}
 			}
-		}
-		else
+		} else
 			log.warn("Object class of Request body not found!");
 	}
-
+	
 }
