@@ -4,6 +4,9 @@ import edu.wcsu.cs360.battleship.client.service.canvas.BattleshipBoardDrawServic
 import edu.wcsu.cs360.battleship.client.service.general.BattleshipGameBoardDrawService;
 import edu.wcsu.cs360.battleship.client.service.io.GameConnectionHandlerService;
 import edu.wcsu.cs360.battleship.client.service.io.ServerConnectionHandlerService;
+import edu.wcsu.cs360.battleship.client.utility.general.ViewUtility;
+import edu.wcsu.cs360.battleship.client.view.AboutView;
+import edu.wcsu.cs360.battleship.client.view.UserInformationView;
 import edu.wcsu.cs360.battleship.common.domain.enumeration.RequestMethod;
 import edu.wcsu.cs360.battleship.common.domain.singleton.ApplicationSession;
 import edu.wcsu.cs360.battleship.common.domain.socket.Request;
@@ -18,6 +21,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -62,6 +66,19 @@ public class BoardController implements Initializable {
 		gameConnectionHandlerService.send(gameRequest);
 		startGameButton.setDisable(true);
 		gameStarted = true;
+	}
+	
+	public void onQuitButtonClick(ActionEvent actionEvent) {
+		Stage stage = (Stage) quitButton.getScene().getWindow();
+		stage.close();
+	}
+	
+	public void onUserInfoMenuItemClick(ActionEvent actionEvent) {
+		ViewUtility.onTop(new UserInformationView());
+	}
+	
+	public void onAboutMenuItemClick(ActionEvent actionEvent) {
+		ViewUtility.onTop(new AboutView());
 	}
 	
 	//endregion

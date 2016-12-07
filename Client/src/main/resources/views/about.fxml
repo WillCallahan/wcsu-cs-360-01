@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="274.0" prefWidth="429.0" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.wcsu.cs360.battleship.client.controller.AboutController">
+   <children>
+      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="14.0" layoutY="14.0" prefHeight="51.0" prefWidth="402.0" text="Battleship" textAlignment="CENTER">
+         <font>
+            <Font name="System Bold" size="30.0" />
+         </font>
+      </Label>
+      <Label fx:id="descriptionLabel" alignment="TOP_CENTER" contentDisplay="CENTER" layoutX="14.0" layoutY="65.0" prefHeight="199.0" prefWidth="402.0" textAlignment="CENTER" wrapText="true" />
+   </children>
+</Pane>
