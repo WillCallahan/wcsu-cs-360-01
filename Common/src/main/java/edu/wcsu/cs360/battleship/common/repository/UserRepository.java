@@ -89,8 +89,9 @@ public class UserRepository implements IUserRepository {
 		EntityTransaction entityTransaction = entityManager.getTransaction();
 		entityTransaction.begin();
 		if (entityManager.find(User.class, type.getUserId()) != null)
-			return entityManager.merge(type);
-		entityManager.persist(type);
+			entityManager.merge(type);
+		else
+			entityManager.persist(type);
 		entityManager.flush();
 		entityTransaction.commit();
 		return type;
