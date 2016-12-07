@@ -5,6 +5,7 @@ import edu.wcsu.cs360.battleship.client.service.general.BattleshipGameBoardDrawS
 import edu.wcsu.cs360.battleship.client.service.io.GameConnectionHandlerService;
 import edu.wcsu.cs360.battleship.client.service.io.ServerConnectionHandlerService;
 import edu.wcsu.cs360.battleship.client.utility.general.ViewUtility;
+import edu.wcsu.cs360.battleship.client.utility.notification.AlertUtility;
 import edu.wcsu.cs360.battleship.client.view.AboutView;
 import edu.wcsu.cs360.battleship.client.view.UserInformationView;
 import edu.wcsu.cs360.battleship.common.domain.enumeration.RequestMethod;
@@ -17,6 +18,7 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
@@ -121,7 +123,10 @@ public class BoardController implements Initializable {
 			ObjectMapperClassCastService objectMapperClassCastService = new ObjectMapperClassCastService();
 			this.game = objectMapperClassCastService.cast(response.getBody(), Game.class);
 			updateGameBoard(game);
-			//TODO Check if there is a winner
+			if (!game.shipsLeft()) {
+				AlertUtility.alert("Game over!", Alert.AlertType.INFORMATION);
+				return;
+			}
 			if (game.getPlayerList().get(game.getCurrentPlayerTurnIndex()).getId() == applicationSession.getUser().getUserId()) { //Its my turn
 				notificationLabel.setText("It's you turn!");
 				opponentPane.setDisable(false);
