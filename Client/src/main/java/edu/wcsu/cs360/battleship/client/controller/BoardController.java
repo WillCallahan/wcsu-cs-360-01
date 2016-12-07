@@ -10,7 +10,9 @@ import edu.wcsu.cs360.battleship.common.domain.socket.Response;
 import edu.wcsu.cs360.battleship.common.domain.trans.Board;
 import edu.wcsu.cs360.battleship.common.domain.trans.Game;
 import edu.wcsu.cs360.battleship.common.domain.trans.Player;
+import edu.wcsu.cs360.battleship.common.domain.trans.Tuple;
 import edu.wcsu.cs360.battleship.common.service.serialize.ObjectMapperClassCastService;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -30,6 +32,7 @@ public class BoardController implements Initializable {
 	
 	private Log log = LogFactory.getLog(this.getClass());
 	private BattleshipGameBoardDrawService battleshipGameBoardDrawService;
+	private boolean gameStarted = false;
 	private Game game;
 	@Inject
 	private GameConnectionHandlerService gameConnectionHandlerService;
@@ -54,6 +57,7 @@ public class BoardController implements Initializable {
 		gameRequest.setTarget("gameController.updatePlayerBoard");
 		gameConnectionHandlerService.send(gameRequest);
 		startGameButton.setDisable(true);
+		gameStarted = true;
 	}
 	
 	//endregion
@@ -61,13 +65,15 @@ public class BoardController implements Initializable {
 	//region Drag Event Handlers
 	
 	public void onPlayerPaneClicked(MouseEvent mouseEvent) {
-		battleshipGameBoardDrawService.togglePlayerShip((int) mouseEvent.getX(), (int) mouseEvent.getY());
-		if (battleshipGameBoardDrawService.getPlayerBattleshipBoardDrawService().getTotalShipImages() == Board.MAX_SHIPS) {
-			startGameButton.setDisable(false);
-			notificationLabel.setText("You may now start the game!");
-		} else {
-			startGameButton.setDisable(true);
-			notificationLabel.setText("Please add " + (Board.MAX_SHIPS - battleshipGameBoardDrawService.getPlayerBattleshipBoardDrawService().getTotalShipImages()) + " more ships on the board.");
+		if (!gameStarted) {
+			battleshipGameBoardDrawService.togglePlayerShip((int) mouseEvent.getX(), (int) mouseEvent.getY());
+			if (battleshipGameBoardDrawService.getPlayerBattleshipBoardDrawService().getTotalShipImages() == Board.MAX_SHIPS) {
+				startGameButton.setDisable(false);
+				notificationLabel.setText("You may now start the game!");
+			} else {
+				startGameButton.setDisable(true);
+				notificationLabel.setText("Please add " + (Board.MAX_SHIPS - battleshipGameBoardDrawService.getPlayerBattleshipBoardDrawService().getTotalShipImages()) + " more ships on the board.");
+			}
 		}
 	}
 	
@@ -75,9 +81,11 @@ public class BoardController implements Initializable {
 	
 	private void handleResponseFromServer(Response response) {
 		ObjectMapperClassCastService objectMapperClassCastService = new ObjectMapperClassCastService();
-		//TODO Draw board
-		log.info("I just got called");
-		objectMapperClassCastService.cast(response.getBody(), Board.class);
+		Platform.runLater(() -> {
+			if (response.getMessage() != null)
+				notificationLabel.setText(response.getMessage());
+		});
+		objectMapperClassCastService.cast(response.getBody(), Game.class);
 	}
 	
 	/**
@@ -86,9 +94,11 @@ public class BoardController implements Initializable {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		log.info("Initializing " + getClass());
-		game.getPlayerList().add(new Player(applicationSession.getUser().getUserId()));
 		battleshipGameBoardDrawService = new BattleshipGameBoardDrawService(playerPane, opponentPane, Board.MAX_SHIPS);
 		notificationLabel.setText("Please add " + Board.MAX_SHIPS + " more ships to the board.");
+		Player player = new Player(applicationSession.getUser().getUserId());
+		player.setBoard(new Board(new Tuple(battleshipGameBoardDrawService.getPlayerBattleshipBoardDrawService().getNumberOfHorizontalBoxes(), battleshipGameBoardDrawService.getPlayerBattleshipBoardDrawService().getNumberOfVerticalBoxes())));
+		game.getPlayerList().add(player);
 	}
 	
 	@FXML

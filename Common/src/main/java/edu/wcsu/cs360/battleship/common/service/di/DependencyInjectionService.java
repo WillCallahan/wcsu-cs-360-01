@@ -12,20 +12,27 @@ import java.util.*;
  * {@link edu.wcsu.cs360.battleship.common.annotation.Inject} annotations.
  */
 public class DependencyInjectionService {
-
+	
 	private Map<String, Object> dependencyMap;
 	private static final List<Class<? extends Annotation>> injectionAnnotationList;
-
+	
 	static {
 		injectionAnnotationList = new ArrayList<>();
 		injectionAnnotationList.add(Inject.class);
 		injectionAnnotationList.add(javax.inject.Inject.class);
 	}
-
+	
 	public DependencyInjectionService() {
 		dependencyMap = new HashMap<>();
 	}
-
+	
+	/**
+	 * Injects dependencies into the object argument
+	 *
+	 * @param object Object to inject dependencies into
+	 * @throws IllegalArgumentException
+	 * @throws IllegalAccessException
+	 */
 	public void injectDependencies(Object object) throws IllegalArgumentException, IllegalAccessException {
 		for (Class<? extends Annotation> annotation : injectionAnnotationList) {
 			for (Field field : getFieldIterableWithAnnotation(annotation, object.getClass())) {
@@ -37,19 +44,19 @@ public class DependencyInjectionService {
 			}
 		}
 	}
-
+	
 	public void registerDependency(Object object) {
 		dependencyMap.put(Character.toLowerCase(object.getClass().getSimpleName().charAt(0)) + object.getClass().getSimpleName().substring(1), object);
 	}
-
-	public <T> void registerDependency(Class<T> c, T object) {
-		dependencyMap.put(Character.toLowerCase(c.getSimpleName().charAt(0)) + c.getSimpleName().substring(1), object);
+	
+	public <T> void registerDependency(Class<T> clazz, T object) {
+		dependencyMap.put(Character.toLowerCase(clazz.getSimpleName().charAt(0)) + clazz.getSimpleName().substring(1), object);
 	}
-
+	
 	public void registerDependency(String dependencyName, Object object) {
 		dependencyMap.put(dependencyName, object);
 	}
-
+	
 	private Iterable<Field> getFieldIterableWithAnnotation(Class<? extends Annotation> annotation, Class c) {
 		List<Field> fieldList = new ArrayList<>();
 		for (Field field : Arrays.asList(c.getDeclaredFields())) {
@@ -60,7 +67,7 @@ public class DependencyInjectionService {
 		}
 		return fieldList;
 	}
-
+	
 	private String getAnnotationDependencyKey(Field field) {
 		try {
 			Inject inject = field.getAnnotation(Inject.class);
@@ -76,5 +83,5 @@ public class DependencyInjectionService {
 	public Iterable<Object> getDependencyList() {
 		return dependencyMap.values();
 	}
-
+	
 }

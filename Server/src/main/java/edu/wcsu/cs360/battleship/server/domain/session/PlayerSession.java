@@ -6,16 +6,27 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.util.Date;
+import java.util.Random;
 
+/**
+ * Groups a {@link Socket} with a {@link Player}
+ */
 public class PlayerSession {
 
 	private Socket socket;
 	private InputStream inputStream;
 	private OutputStream outputStream;
 	private Player player;
+	private final long sessionId;
 
+	{
+		Random random = new Random((new Date()).getTime());
+		sessionId = random.nextLong();
+	}
+	
 	private PlayerSession() {
-
+		
 	}
 
 	public PlayerSession(Socket socket, Player player) throws IOException {
@@ -44,5 +55,9 @@ public class PlayerSession {
 
 	public Socket getSocket() {
 		return socket;
+	}
+	
+	public long getSessionId() {
+		return sessionId;
 	}
 }

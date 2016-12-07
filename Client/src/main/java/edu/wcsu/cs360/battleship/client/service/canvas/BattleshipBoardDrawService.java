@@ -162,11 +162,11 @@ public class BattleshipBoardDrawService {
 		return 0;
 	}
 	
-	private int getNumberOfHorizontalBoxes() {
+	public int getNumberOfHorizontalBoxes() {
 		return (int) pane.getWidth() / GRID_BOX_MIN_WIDTH_PIXELS;
 	}
 	
-	private int getNumberOfVerticalBoxes() {
+	public int getNumberOfVerticalBoxes() {
 		return (int) pane.getHeight() / GRID_BOX_MIN_HEIGHT_PIXELS;
 	}
 	

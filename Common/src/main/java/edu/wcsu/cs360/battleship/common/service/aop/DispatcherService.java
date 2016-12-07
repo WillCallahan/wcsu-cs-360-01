@@ -16,6 +16,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Dispatches {@link Request} to a {@link Method} in {@link DispatcherService#registeredControllerList} based on the
+ * name of the {@link Class} in the {@link DispatcherService#registeredControllerList} and the name of the {@link Method}
+ * in the {@link DispatcherService#registeredControllerList}. For each {@link DispatcherService#registeredControllerList},
+ * dependencies are injected using a {@link DependencyInjectionService}
+ */
 public class DispatcherService implements IDispatcher {
 	
 	private Log log = LogFactory.getLog(this.getClass());
@@ -37,6 +43,9 @@ public class DispatcherService implements IDispatcher {
 		this.iClassCastServicesList.add(new ObjectMapperClassCastService());
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public Response dispatch(Request request, Object... knownObjects) {
 		if (request == null)
@@ -68,21 +77,36 @@ public class DispatcherService implements IDispatcher {
 		throw new IllegalArgumentException("Target not found!");
 	}
 	
+	/**
+	 * Gets the arguments to be provided to a method dynamically.
+	 *
+	 * @param method       Method to populate arguments of
+	 * @param knownObjects Objects to include in possible object arguments
+	 * @return Ordered argument array to be passed to the {@link Method}
+	 */
 	protected Object[] getArguments(Method method, Object... knownObjects) {
 		List<Object> objectList = new ArrayList<>();
 		for (int i = 0; i < method.getParameterTypes().length; i++) {
 			log.trace("Searching for instances of " + method.getParameterTypes()[i]);
 			Object foundObject = null;
-			for (Object knownObject : knownObjects) {
+			for (Object knownObject : knownObjects) { //Try to provide argument from known objects by explicit type
 				if (method.getParameterTypes()[i] == knownObject.getClass()) {
 					foundObject = knownObject;
 					break;
 				}
 			}
-			if (foundObject == null) {
+			if (foundObject == null) { //Try to provide argument from dependency injection service
 				for (Object object : dependencyInjectionService.getDependencyList()) {
 					if (method.getParameterTypes()[i] == object.getClass()) {
 						foundObject = object;
+						break;
+					}
+				}
+			}
+			if (foundObject == null) { //Try to provide argument from inherited classes in known objects
+				for (Object knownObject : knownObjects) {
+					if (method.getParameterTypes()[i].isAssignableFrom(knownObject.getClass())) {
+						foundObject = knownObject;
 						break;
 					}
 				}
@@ -97,6 +121,13 @@ public class DispatcherService implements IDispatcher {
 		return objectList.toArray();
 	}
 	
+	/**
+	 * Attempts to cast the {@link Request#body} to an explicit {@link java.lang.reflect.Type} based on the arguments
+	 * the in {@link Method} argument.
+	 *
+	 * @param method  Method get gather type object information from
+	 * @param request Request Object with casted {@link Request#body} if a matching method argument was found
+	 */
 	@SuppressWarnings("unchecked")
 	protected void tryCastRequestType(Method method, Request request) {
 		Class<?> clazz = null;

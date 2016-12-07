@@ -17,10 +17,14 @@ public class Board {
 	
 	private ShipList shipList;
 	
-	public Board() {
-//		size = new Tuple(5, 5);
-//		board = new byte[size.getX()][size.getY()];
-//		shipList = new ShipList();
+	private Board() {
+		
+	}
+	
+	public Board(Tuple size) {
+		this.size = size;
+		board = new byte[size.getX()][size.getY()];
+		shipList = new ShipList();
 //
 //		shipList.addShip(new Tuple(2, 2), new Tuple(2, 3), (byte) 0);
 //		shipList.addShip(new Tuple(1, 3), new Tuple(3, 3), (byte) 1);
@@ -90,5 +94,21 @@ public class Board {
 	
 	public void setBadTable(boolean badTable) {
 		this.badTable = badTable;
+	}
+	
+	public Tuple getSize() {
+		return size;
+	}
+	
+	public ShipList getShipList() {
+		return shipList;
+	}
+	
+	public void setShipList(ShipList shipList) {
+		this.shipList = shipList;
+	}
+	
+	public final byte[][] getBoard() {
+		return board;
 	}
 }

@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import edu.wcsu.cs360.battleship.common.domain.socket.Request;
 import edu.wcsu.cs360.battleship.common.domain.socket.Response;
+import edu.wcsu.cs360.battleship.common.domain.trans.Game;
 import edu.wcsu.cs360.battleship.common.service.aop.IDispatcher;
 import edu.wcsu.cs360.battleship.server.domain.session.PlayerSession;
 import org.apache.commons.logging.Log;
@@ -19,6 +20,7 @@ public class ClientGameConnectionService extends Thread {
 	private Log log = LogFactory.getLog(this.getClass());
 	private IDispatcher iDispatcher;
 	private PlayerSession playerSession;
+	private Game game;
 	private List<PlayerSession> playerSessionList;
 	private ObjectMapper objectMapper;
 	
@@ -26,11 +28,12 @@ public class ClientGameConnectionService extends Thread {
 		log.info("A client has connected to the server!");
 	}
 	
-	public ClientGameConnectionService(PlayerSession playerSession, List<PlayerSession> playerSessionList, IDispatcher iDispatcher) throws IOException {
+	public ClientGameConnectionService(PlayerSession playerSession, Game game, List<PlayerSession> playerSessionList, IDispatcher iDispatcher) throws IOException {
 		this();
 		this.playerSession = playerSession;
 		this.iDispatcher = iDispatcher;
 		this.playerSessionList = playerSessionList;
+		this.game = game;
 		objectMapper = new ObjectMapper();
 		objectMapper.configure(JsonParser.Feature.AUTO_CLOSE_SOURCE, false);
 		objectMapper.configure(JsonGenerator.Feature.AUTO_CLOSE_TARGET, false);
@@ -46,7 +49,7 @@ public class ClientGameConnectionService extends Thread {
 		try {
 			while (playerSession.getSocket().isConnected()) {
 				Request request = objectMapper.readValue(playerSession.getInputStream(), Request.class);
-				Response response = iDispatcher.dispatch(request, playerSessionList, playerSession);
+				Response response = iDispatcher.dispatch(request, playerSessionList, playerSession, game);
 				if (response == null)
 					response = new Response(200);
 				log.info("Sending response: " + response.toString());

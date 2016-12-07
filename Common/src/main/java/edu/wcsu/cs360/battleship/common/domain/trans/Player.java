@@ -2,7 +2,7 @@ package edu.wcsu.cs360.battleship.common.domain.trans;
 
 public class Player {
 	private long id;
-	private Board board = new Board();
+	private Board board;
 	
 	private Player() {
 		

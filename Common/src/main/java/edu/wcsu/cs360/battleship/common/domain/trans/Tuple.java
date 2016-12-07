@@ -4,9 +4,13 @@ public class Tuple {
 	private int x;
 	private int y;
 	
-	public Tuple(int i, int j) {
-		x = i;
-		y = j;
+	private Tuple() {
+		
+	}
+	
+	public Tuple(int x, int y) {
+		this.x = x;
+		this.y = y;
 	}
 	
 	public int size(Tuple p2) {
