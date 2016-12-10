@@ -679,7 +679,7 @@
   <target name="artifact.client:jar" depends="init.artifacts, compile.module.client, compile.module.common" description="Build &#39;Client:jar&#39; artifact">
     <property name="artifact.temp.output.client:jar" value="${artifacts.temp.dir}/Client_jar"/>
     <mkdir dir="${artifact.temp.output.client:jar}"/>
-    <jar destfile="${temp.jar.path.Client.jar}" duplicate="preserve" filesetmanifest="mergewithoutmain">
+    <jar destfile="${temp.jar.path.Client.jar}" duplicate="preserve" manifest="${basedir}/Client/src/main/resources/META-INF/MANIFEST.MF">
       <zipfileset dir="${client.output.dir}"/>
       <zipfileset dir="${common.output.dir}"/>
       <zipfileset src="${basedir}/Common/lib/hibernate-entitymanager-5.2.3.Final.jar"/>
@@ -736,7 +736,7 @@
   <target name="artifact.server:jar" depends="init.artifacts, compile.module.server, compile.module.common" description="Build &#39;Server:jar&#39; artifact">
     <property name="artifact.temp.output.server:jar" value="${artifacts.temp.dir}/Server_jar"/>
     <mkdir dir="${artifact.temp.output.server:jar}"/>
-    <jar destfile="${temp.jar.path.Server.jar}" duplicate="preserve" filesetmanifest="mergewithoutmain">
+    <jar destfile="${temp.jar.path.Server.jar}" duplicate="preserve" manifest="${basedir}/Server/src/main/resources/META-INF/MANIFEST.MF">
       <zipfileset dir="${server.output.dir}"/>
       <zipfileset dir="${common.output.dir}"/>
       <zipfileset src="${basedir}/Common/lib/javax.persistence.jar"/>
