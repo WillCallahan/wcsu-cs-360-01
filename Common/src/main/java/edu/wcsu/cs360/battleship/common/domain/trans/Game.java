@@ -27,22 +27,6 @@ public class Game implements Serializable {
 		return this.currentPlayerTurnIndex % playerList.size();
 	}
 	
-	/**
-	 * Gets the opponent of the {@link Player} with a matching {@link Player#id}
-	 *
-	 * @param id Id of the current player
-	 * @return Opponents of the {@link Player} with a matching {@link Player#id}
-	 */
-	@JsonIgnore
-	public List<Player> getOpponentList(long id) {
-		List<Player> opponentList = new ArrayList<>();
-		for (Player player : this.playerList) {
-			if (player.getId() != id)
-				opponentList.add(player);
-		}
-		return opponentList;
-	}
-	
 	public List<Player> getPlayerList() {
 		return playerList;
 	}

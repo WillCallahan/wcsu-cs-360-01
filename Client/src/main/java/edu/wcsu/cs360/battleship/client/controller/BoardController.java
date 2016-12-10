@@ -129,7 +129,7 @@ public class BoardController implements Initializable {
 	public void onOpponentPaneClicked(MouseEvent mouseEvent) throws IOException {
 		if (gameStarted) {
 			//FIXME This does not handle more than two players
-			Player opponent = game.getOpponentList(applicationSession.getUser().getUserId()).get(0);
+			Player opponent = PlayerUtility.getPlayerListByNotId(game.getPlayerList(), applicationSession.getUser().getUserId()).get(0);
 			opponent.getBoard().hitLocation(
 					battleshipGameBoardDrawService.getOpponentBattleshipBoardDrawService().getHorizontalGridLocationFromX((int) mouseEvent.getX()),
 					battleshipGameBoardDrawService.getOpponentBattleshipBoardDrawService().getVerticalGridLocationFromY((int) mouseEvent.getY())
@@ -156,7 +156,10 @@ public class BoardController implements Initializable {
 			this.game = objectMapperClassCastService.cast(response.getBody(), Game.class);
 			updateGameBoard(game);
 			//TODO Check if there is a winner
-			if (game.getPlayerList().get(game.getCurrentPlayerTurnIndex()).getId() == applicationSession.getUser().getUserId()) { //Its my turn
+			if (game.getPlayerList().size() == 1) {
+				notificationLabel.setText("Waiting for other players...");
+				opponentPane.setDisable(true);
+			} else if (game.getPlayerList().get(game.getCurrentPlayerTurnIndex()).getId() == applicationSession.getUser().getUserId()) { //Its my turn
 				notificationLabel.setText("It's you turn!");
 				opponentPane.setDisable(false);
 			} else {
@@ -170,7 +173,7 @@ public class BoardController implements Initializable {
 		this.game.setPlayerList(game.getPlayerList());
 		Player player = PlayerUtility.getPlayerById(game.getPlayerList(), applicationSession.getUser().getUserId());
 		Player opponent = null;
-		List<Player> opponentList = game.getOpponentList(applicationSession.getUser().getUserId());
+		List<Player> opponentList = PlayerUtility.getPlayerListByNotId(game.getPlayerList(), applicationSession.getUser().getUserId());
 		if (opponentList.size() > 0)
 			opponent = opponentList.get(0);
 		if (player != null)

@@ -1,6 +1,6 @@
 package edu.wcsu.cs360.battleship.client.controller;
 
-import edu.wcsu.cs360.battleship.client.repository.UserFutureRepository;
+import edu.wcsu.cs360.battleship.common.repository.UserFutureRepository;
 import edu.wcsu.cs360.battleship.client.utility.general.ViewUtility;
 import edu.wcsu.cs360.battleship.client.utility.notification.AlertUtility;
 import edu.wcsu.cs360.battleship.client.view.BoardView;
@@ -83,7 +83,7 @@ public class LoginController implements Initializable {
 	}
 	
 	public void onCreateAccountButtonClick(ActionEvent actionEvent) {
-		ViewUtility.onTop(new CreateAccountView(), createAccountButton.getScene().getWindow());
+		ViewUtility.replace(new CreateAccountView(), ((Stage) (createAccountButton).getScene().getWindow()));
 	}
 	
 	/**

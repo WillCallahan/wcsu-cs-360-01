@@ -4,6 +4,7 @@ import edu.wcsu.cs360.battleship.client.utility.general.ViewUtility;
 import edu.wcsu.cs360.battleship.client.utility.notification.AlertUtility;
 import edu.wcsu.cs360.battleship.client.utility.validation.TextInputValidationUtility;
 import edu.wcsu.cs360.battleship.client.view.BoardView;
+import edu.wcsu.cs360.battleship.client.view.LoginView;
 import edu.wcsu.cs360.battleship.common.domain.entity.User;
 import edu.wcsu.cs360.battleship.common.domain.session.ApplicationSession;
 import edu.wcsu.cs360.battleship.common.repository.IUserFutureRepository;
@@ -82,8 +83,7 @@ public class CreateAccountController implements Initializable {
 
 	
 	public void onCancelButtonClick(ActionEvent actionEvent) {
-		Stage stage = (Stage) cancelButton.getScene().getWindow();
-		stage.close();
+		ViewUtility.replace(new LoginView(), ((Stage) (cancelButton).getScene().getWindow()));
 	}
 	
 	//endregion

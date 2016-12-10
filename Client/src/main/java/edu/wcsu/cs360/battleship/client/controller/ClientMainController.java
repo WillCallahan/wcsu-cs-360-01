@@ -2,13 +2,14 @@ package edu.wcsu.cs360.battleship.client.controller;
 
 import com.airhacks.afterburner.injection.Injector;
 import com.sun.javafx.css.StyleManager;
-import edu.wcsu.cs360.battleship.client.repository.UserFutureRepository;
+import edu.wcsu.cs360.battleship.common.repository.UserFutureRepository;
 import edu.wcsu.cs360.battleship.client.service.io.GameConnectionHandlerService;
 import edu.wcsu.cs360.battleship.client.service.io.ServerConnectionHandlerService;
 import edu.wcsu.cs360.battleship.client.utility.general.ViewUtility;
 import edu.wcsu.cs360.battleship.client.utility.notification.AlertUtility;
 import edu.wcsu.cs360.battleship.client.view.LoginView;
 import edu.wcsu.cs360.battleship.common.repository.IUserFutureRepository;
+import edu.wcsu.cs360.battleship.common.service.io.IServerConnectionHandlerService;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;
@@ -28,9 +29,9 @@ public class ClientMainController extends Application {
 	
 	private void setupInjector() throws Exception {
 		log.info("Creating dependency injection instances...");
-		ServerConnectionHandlerService serverConnectionHandlerService = new ServerConnectionHandlerService("localhost", 8000);
-		Injector.setModelOrService(ServerConnectionHandlerService.class, serverConnectionHandlerService);
-		Injector.setModelOrService(IUserFutureRepository.class, new UserFutureRepository(serverConnectionHandlerService));
+		IServerConnectionHandlerService iServerConnectionHandlerService = new ServerConnectionHandlerService("localhost", 8000);
+		Injector.setModelOrService(IServerConnectionHandlerService.class, iServerConnectionHandlerService);
+		Injector.setModelOrService(IUserFutureRepository.class, new UserFutureRepository(iServerConnectionHandlerService));
 		Injector.setModelOrService(GameConnectionHandlerService.class, new GameConnectionHandlerService("localhost", 8010));
 		log.info("Successfully created dependency injection instances!");
 	}
