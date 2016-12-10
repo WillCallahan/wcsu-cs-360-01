@@ -8,6 +8,9 @@ import org.apache.commons.logging.LogFactory;
 import java.io.IOException;
 import java.net.Socket;
 
+/**
+ * Accepts connections from clients
+ */
 public class ClientConnectionHandlerService implements IConnectionListenerService {
 	
 	private Log log = LogFactory.getLog(this.getClass());

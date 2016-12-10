@@ -8,30 +8,34 @@ import javax.net.ServerSocketFactory;
 import java.io.IOException;
 import java.net.ServerSocket;
 
+/**
+ * Responds to requests from a client and performs processing based on the request. When processing is complete, a
+ * response is returned to the client and the connection is closed.
+ */
 public class StatelessConnectionServer extends Thread implements IConnectionServer {
-
+	
 	private Log log = LogFactory.getLog(this.getClass());
 	private ServerSocketFactory serverSocketFactory;
 	private IConnectionListenerService iConnectionListenerService;
-
+	
 	private StatelessConnectionServer() {
-
+		
 	}
-
+	
 	public StatelessConnectionServer(ServerSocketFactory serverSocketFactory) {
 		this.serverSocketFactory = serverSocketFactory;
 	}
-
+	
 	public StatelessConnectionServer(IConnectionListenerService iConnectionListenerService) {
 		this(ServerSocketFactory.getDefault());
 		this.iConnectionListenerService = iConnectionListenerService;
 	}
-
+	
 	public StatelessConnectionServer(ServerSocketFactory serverSocketFactory, IConnectionListenerService iConnectionListenerService) {
 		this(serverSocketFactory);
 		this.iConnectionListenerService = iConnectionListenerService;
 	}
-
+	
 	/**
 	 * {@inheritDoc}
 	 */
@@ -53,7 +57,7 @@ public class StatelessConnectionServer extends Thread implements IConnectionServ
 		}
 		log.info("Exiting StatelessConnectionServer");
 	}
-
+	
 	/**
 	 * {@inheritDoc}
 	 */

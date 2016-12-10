@@ -5,7 +5,7 @@ import edu.wcsu.cs360.battleship.client.utility.notification.AlertUtility;
 import edu.wcsu.cs360.battleship.client.utility.validation.TextInputValidationUtility;
 import edu.wcsu.cs360.battleship.client.view.BoardView;
 import edu.wcsu.cs360.battleship.common.domain.entity.User;
-import edu.wcsu.cs360.battleship.common.domain.singleton.ApplicationSession;
+import edu.wcsu.cs360.battleship.common.domain.session.ApplicationSession;
 import edu.wcsu.cs360.battleship.common.repository.IUserFutureRepository;
 import edu.wcsu.cs360.battleship.common.service.serialize.IClassCastService;
 import edu.wcsu.cs360.battleship.common.service.serialize.ObjectMapperClassCastService;
@@ -27,6 +27,9 @@ import javax.inject.Inject;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+/**
+ * Controller for the {@link edu.wcsu.cs360.battleship.client.view.CreateAccountView}
+ */
 public class CreateAccountController implements Initializable {
 	
 	private Log log = LogFactory.getLog(this.getClass());

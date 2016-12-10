@@ -2,6 +2,9 @@ package edu.wcsu.cs360.battleship.common.utility;
 
 import edu.wcsu.cs360.battleship.common.domain.socket.Response;
 
+/**
+ * Utility classes for a {@link Response}
+ */
 public class ResponseUtility {
 	
 	/**

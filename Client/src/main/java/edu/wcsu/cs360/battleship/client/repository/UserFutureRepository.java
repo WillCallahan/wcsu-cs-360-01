@@ -12,6 +12,9 @@ import org.apache.commons.logging.LogFactory;
 import javax.inject.Inject;
 import java.util.concurrent.Future;
 
+/**
+ * {@inheritDoc}
+ */
 public class UserFutureRepository implements IUserFutureRepository {
 	
 	private Log log = LogFactory.getLog(this.getClass());

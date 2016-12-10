@@ -6,6 +6,9 @@ import javafx.scene.control.TextInputControl;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Common {@link TextInputControl} utility methods
+ */
 public class TextInputValidationUtility {
 	
 	//region hasText Validation

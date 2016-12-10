@@ -15,6 +15,9 @@ import javafx.stage.Stage;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+/**
+ * Main class for the client end of the application
+ */
 public class ClientMainController extends Application {
 	
 	private Log log = LogFactory.getLog(this.getClass());

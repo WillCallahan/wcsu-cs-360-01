@@ -1,5 +1,8 @@
 package edu.wcsu.cs360.battleship.common.domain.enumeration;
 
+/**
+ * Type of request that a client make make to a server
+ */
 public enum RequestMethod {
 
 	GET(2), POST(4), UPDATE(8), DELETE(16);

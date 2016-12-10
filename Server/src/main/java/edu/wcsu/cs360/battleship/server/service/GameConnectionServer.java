@@ -9,6 +9,9 @@ import javax.net.ServerSocketFactory;
 import java.io.IOException;
 import java.net.ServerSocket;
 
+/**
+ * Listens for game connection request from clients.
+ */
 public class GameConnectionServer extends Thread implements IConnectionServer {
 	
 	private final int MAX_CLIENTS = 2;
@@ -35,6 +38,10 @@ public class GameConnectionServer extends Thread implements IConnectionServer {
 	}
 	
 	/**
+	 * When a client connects, that are added to an existing {@link IConnectionListenerService} until the maximum
+	 * allowed number of clients for a game reaches the {@link GameConnectionServer#MAX_CLIENTS}. Once this limit is
+	 * met, a new {@link IConnectionListenerService} is created that waits for more clients.
+	 * <p>
 	 * {@inheritDoc}
 	 */
 	@Override

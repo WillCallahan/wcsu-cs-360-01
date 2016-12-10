@@ -16,6 +16,9 @@ import org.apache.commons.logging.LogFactory;
 
 import java.util.List;
 
+/**
+ * Controller that handles requests related to Battleship games
+ */
 @Controller
 public class GameController {
 	
@@ -24,6 +27,13 @@ public class GameController {
 	@Inject
 	private IUserRepository iUserRepository;
 	
+	/**
+	 * Updates the {@link Game#playerList} from the client for the current session
+	 *
+	 * @param request Request from a client
+	 * @param game    {@link Game} from the {@link Request#body}
+	 * @return Response
+	 */
 	@Mapping(requestMethod = RequestMethod.GET)
 	public Response<Game> makeMove(Request<Game> request, Game game) {
 		game.setPlayerList(request.getBody().getPlayerList());
@@ -31,6 +41,15 @@ public class GameController {
 		return new Response<>(game);
 	}
 	
+	/**
+	 * Updates all the player boards in the game
+	 *
+	 * @param playerRequest     Request from a client
+	 * @param playerSessionList All players in the game
+	 * @param playerSession     Current player's session
+	 * @param game              Game related to all players
+	 * @return Response
+	 */
 	@Mapping(requestMethod = RequestMethod.POST)
 	public Response<Game> updatePlayerBoard(Request<Player> playerRequest, List<PlayerSession> playerSessionList, PlayerSession playerSession, Game game) {
 		if (playerSession.getPlayer() == null)

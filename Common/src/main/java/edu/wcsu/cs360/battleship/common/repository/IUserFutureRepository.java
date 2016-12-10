@@ -5,6 +5,12 @@ import edu.wcsu.cs360.battleship.common.domain.socket.Response;
 
 import java.util.concurrent.Future;
 
+/**
+ * Calls a remote server to request resources related to a {@link User}
+ *
+ * All requests are performed on a separate thread. When the thread has completed execution, a {@link Future} is
+ * returned, containing a {@link Response} with a {@link Response#body} of the type {@link User}
+ */
 public interface IUserFutureRepository extends ICrudFuture<User, Long> {
 	
 	/**

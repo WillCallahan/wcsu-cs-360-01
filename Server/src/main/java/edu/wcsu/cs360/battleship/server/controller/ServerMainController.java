@@ -15,6 +15,9 @@ import org.apache.commons.logging.LogFactory;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
+/**
+ * Main class for the serve end of the application
+ */
 public class ServerMainController {
 	
 	private Log log = LogFactory.getLog(this.getClass());

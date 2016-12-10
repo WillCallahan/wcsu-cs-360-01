@@ -12,6 +12,9 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Accepts game connections from clients.
+ */
 public class ClientGameConnectionHandlerService implements IConnectionListenerService {
 	
 	private Log log = LogFactory.getLog(this.getClass());

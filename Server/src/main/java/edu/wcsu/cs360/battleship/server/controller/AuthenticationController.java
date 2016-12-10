@@ -11,6 +11,9 @@ import edu.wcsu.cs360.battleship.common.repository.IUserRepository;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+/**
+ * Authentication Controller class used to authenticate clients
+ */
 @Controller
 public class AuthenticationController {
 	
@@ -19,8 +22,16 @@ public class AuthenticationController {
 	@Inject
 	private IUserRepository iUserRepository;
 	
+	/**
+	 * Authenticated a user by the {@link User#username} and {@link User#password}
+	 *
+	 * @param request Request from the client
+	 * @param user    User from the {@link Request#body}
+	 * @return Response
+	 */
 	@Mapping(requestMethod = RequestMethod.GET)
 	public Response authenticateByUsernameAndPassword(Request request, User user) {
+		log.info("Attempting to authenticate " + user.getUsername());
 		return new Response<>(iUserRepository.findOneByUsernameAndPassword(user.getUsername(), user.getPassword()), 200);
 	}
 	
