@@ -15,6 +15,10 @@ import org.apache.commons.logging.LogFactory;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * Responds to requests from clients, performing operations related to a game. All players in the game are accessible
+ * in the {@link ClientGameConnectionService#playerSessionList}
+ */
 public class ClientGameConnectionService extends Thread {
 	
 	private Log log = LogFactory.getLog(this.getClass());

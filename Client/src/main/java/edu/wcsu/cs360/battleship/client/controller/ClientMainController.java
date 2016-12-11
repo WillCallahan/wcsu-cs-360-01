@@ -2,19 +2,24 @@ package edu.wcsu.cs360.battleship.client.controller;
 
 import com.airhacks.afterburner.injection.Injector;
 import com.sun.javafx.css.StyleManager;
-import edu.wcsu.cs360.battleship.client.repository.UserFutureRepository;
 import edu.wcsu.cs360.battleship.client.service.io.GameConnectionHandlerService;
 import edu.wcsu.cs360.battleship.client.service.io.ServerConnectionHandlerService;
 import edu.wcsu.cs360.battleship.client.utility.general.ViewUtility;
 import edu.wcsu.cs360.battleship.client.utility.notification.AlertUtility;
 import edu.wcsu.cs360.battleship.client.view.LoginView;
 import edu.wcsu.cs360.battleship.common.repository.IUserFutureRepository;
+import edu.wcsu.cs360.battleship.common.repository.UserFutureRepository;
+import edu.wcsu.cs360.battleship.common.service.io.IServerConnectionHandlerService;
+import edu.wcsu.cs360.battleship.common.service.io.PropertyFileService;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+/**
+ * Main class for the client end of the application
+ */
 public class ClientMainController extends Application {
 	
 	private Log log = LogFactory.getLog(this.getClass());
@@ -25,10 +30,11 @@ public class ClientMainController extends Application {
 	
 	private void setupInjector() throws Exception {
 		log.info("Creating dependency injection instances...");
-		ServerConnectionHandlerService serverConnectionHandlerService = new ServerConnectionHandlerService("localhost", 8000);
-		Injector.setModelOrService(ServerConnectionHandlerService.class, serverConnectionHandlerService);
-		Injector.setModelOrService(IUserFutureRepository.class, new UserFutureRepository(serverConnectionHandlerService));
-		Injector.setModelOrService(GameConnectionHandlerService.class, new GameConnectionHandlerService("localhost", 8010));
+		PropertyFileService propertyFileService = new PropertyFileService("server.properties");
+		IServerConnectionHandlerService iServerConnectionHandlerService = new ServerConnectionHandlerService(propertyFileService.getProperty("serverIpAddress").toString(), Integer.parseInt(propertyFileService.getProperty("serverPort").toString()));
+		Injector.setModelOrService(IServerConnectionHandlerService.class, iServerConnectionHandlerService);
+		Injector.setModelOrService(IUserFutureRepository.class, new UserFutureRepository(iServerConnectionHandlerService));
+		Injector.setModelOrService(GameConnectionHandlerService.class, new GameConnectionHandlerService(propertyFileService.getProperty("gameServerIpAddress").toString(), Integer.parseInt(propertyFileService.getProperty("gameServerPort").toString())));
 		log.info("Successfully created dependency injection instances!");
 	}
 	

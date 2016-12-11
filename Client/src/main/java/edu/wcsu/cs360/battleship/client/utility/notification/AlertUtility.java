@@ -7,6 +7,9 @@ import javafx.scene.control.Alert;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+/**
+ * Common utility methods that alert with user with the provided details
+ */
 public class AlertUtility {
 	
 	private static Log log = LogFactory.getLog(AlertUtility.class);

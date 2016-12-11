@@ -9,22 +9,28 @@ import javax.net.ServerSocketFactory;
 import java.io.IOException;
 import java.net.ServerSocket;
 
+/**
+ * Listens for game connection request from clients.
+ */
 public class GameConnectionServer extends Thread implements IConnectionServer {
 	
 	private final int MAX_CLIENTS = 2;
 	private Log log = LogFactory.getLog(this.getClass());
 	private ServerSocketFactory serverSocketFactory;
+	private int port;
 	private IDispatcher iDispatcher;
 	
 	private GameConnectionServer() {
-		
+		port = 8010;
 	}
 	
 	private GameConnectionServer(ServerSocketFactory serverSocketFactory) {
+		this();
 		this.serverSocketFactory = serverSocketFactory;
 	}
 	
 	public GameConnectionServer(ServerSocketFactory serverSocketFactory, IDispatcher iDispatcher) {
+		this();
 		this.serverSocketFactory = serverSocketFactory;
 		this.iDispatcher = iDispatcher;
 	}
@@ -34,7 +40,17 @@ public class GameConnectionServer extends Thread implements IConnectionServer {
 		this.iDispatcher = iDispatcher;
 	}
 	
+	public GameConnectionServer(IDispatcher iDispatcher, int port) {
+		this(ServerSocketFactory.getDefault());
+		this.iDispatcher = iDispatcher;
+		this.port = port;
+	}
+	
 	/**
+	 * When a client connects, that are added to an existing {@link IConnectionListenerService} until the maximum
+	 * allowed number of clients for a game reaches the {@link GameConnectionServer#MAX_CLIENTS}. Once this limit is
+	 * met, a new {@link IConnectionListenerService} is created that waits for more clients.
+	 * <p>
 	 * {@inheritDoc}
 	 */
 	@Override

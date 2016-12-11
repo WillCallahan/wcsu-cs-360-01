@@ -1,12 +1,12 @@
 package edu.wcsu.cs360.battleship.client.controller;
 
-import edu.wcsu.cs360.battleship.client.repository.UserFutureRepository;
+import edu.wcsu.cs360.battleship.common.repository.UserFutureRepository;
 import edu.wcsu.cs360.battleship.client.utility.general.ViewUtility;
 import edu.wcsu.cs360.battleship.client.utility.notification.AlertUtility;
 import edu.wcsu.cs360.battleship.client.view.BoardView;
 import edu.wcsu.cs360.battleship.client.view.CreateAccountView;
 import edu.wcsu.cs360.battleship.common.domain.entity.User;
-import edu.wcsu.cs360.battleship.common.domain.singleton.ApplicationSession;
+import edu.wcsu.cs360.battleship.common.domain.session.ApplicationSession;
 import edu.wcsu.cs360.battleship.common.service.serialize.ObjectMapperClassCastService;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -25,6 +25,9 @@ import javax.inject.Inject;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+/**
+ * Controller for the {@link edu.wcsu.cs360.battleship.client.view.LoginView}
+ */
 public class LoginController implements Initializable {
 	
 	private Log log = LogFactory.getLog(this.getClass());
@@ -80,7 +83,7 @@ public class LoginController implements Initializable {
 	}
 	
 	public void onCreateAccountButtonClick(ActionEvent actionEvent) {
-		ViewUtility.onTop(new CreateAccountView(), createAccountButton.getScene().getWindow());
+		ViewUtility.replace(new CreateAccountView(), ((Stage) (createAccountButton).getScene().getWindow()));
 	}
 	
 	/**

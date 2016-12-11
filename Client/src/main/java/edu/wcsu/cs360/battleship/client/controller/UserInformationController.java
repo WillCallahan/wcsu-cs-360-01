@@ -3,7 +3,7 @@ package edu.wcsu.cs360.battleship.client.controller;
 import edu.wcsu.cs360.battleship.client.utility.notification.AlertUtility;
 import edu.wcsu.cs360.battleship.client.utility.validation.TextInputValidationUtility;
 import edu.wcsu.cs360.battleship.common.domain.entity.User;
-import edu.wcsu.cs360.battleship.common.domain.singleton.ApplicationSession;
+import edu.wcsu.cs360.battleship.common.domain.session.ApplicationSession;
 import edu.wcsu.cs360.battleship.common.repository.IUserFutureRepository;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -22,6 +22,9 @@ import javax.inject.Inject;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+/**
+ * Controller for the {@link edu.wcsu.cs360.battleship.client.view.UserInformationView}
+ */
 public class UserInformationController implements Initializable {
 	
 	private Log log = LogFactory.getLog(this.getClass());

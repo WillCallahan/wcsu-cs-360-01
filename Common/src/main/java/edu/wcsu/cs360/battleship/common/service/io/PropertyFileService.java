@@ -18,8 +18,13 @@ public class PropertyFileService {
 
 	private Log log = LogFactory.getLog(this.getClass());
 	private Map<Object, Object> propertyMap;
+	
+	private PropertyFileService() {
+		
+	}
 
 	public PropertyFileService(String... propertyFileNameArray) {
+		this();
 		propertyMap = new HashMap<>();
 		for (String propertyFileName : propertyFileNameArray)
 			loadProperties(propertyFileName);
@@ -58,6 +63,8 @@ public class PropertyFileService {
 	}
 
 	public Object getProperty(Object property) {
-		return propertyMap.get(property);
+		Object foundProperty = propertyMap.get(property);
+		log.debug("Getting Property:" + String.format("%n") + "\tProperty Key: " + property  + String.format("%n") + "\tProperty Value: " + foundProperty);
+		return foundProperty;
 	}
 }

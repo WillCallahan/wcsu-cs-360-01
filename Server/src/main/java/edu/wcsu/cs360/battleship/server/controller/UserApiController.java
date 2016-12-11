@@ -12,6 +12,9 @@ import edu.wcsu.cs360.battleship.common.repository.IUserRepository;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+/**
+ * Controller that response to requests related to a {@link User}
+ */
 @Controller
 public class UserApiController implements IUserApi {
 	

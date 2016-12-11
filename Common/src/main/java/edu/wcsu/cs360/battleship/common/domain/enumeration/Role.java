@@ -1,5 +1,8 @@
 package edu.wcsu.cs360.battleship.common.domain.enumeration;
 
+/**
+ * Role that a user may have
+ */
 public enum Role {
 
 	BANNED("banned"), PLAYER("player"), ADMINISTRATOR("administrator");

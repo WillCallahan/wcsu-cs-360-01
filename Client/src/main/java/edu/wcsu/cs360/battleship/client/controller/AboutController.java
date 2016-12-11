@@ -9,6 +9,9 @@ import org.apache.commons.logging.LogFactory;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+/**
+ * Controller for the {@link edu.wcsu.cs360.battleship.client.view.AboutView}
+ */
 public class AboutController implements Initializable {
 	
 	private Log log = LogFactory.getLog(this.getClass());
