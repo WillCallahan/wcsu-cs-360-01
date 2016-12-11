@@ -25,13 +25,14 @@ public class ServerMainController {
 	private GameConnectionServer gameConnectionServer;
 	
 	public ServerMainController() {
-		PropertyFileService propertyFileService = new PropertyFileService("database.properties");
-		EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory(propertyFileService.getProperty("jpa.persistence.unit.name").toString());
+		PropertyFileService databasePropertyFileService = new PropertyFileService("database.properties");
+		PropertyFileService serverPropertyFileService = new PropertyFileService("server.properties");
+		EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory(databasePropertyFileService.getProperty("jpa.persistence.unit.name").toString());
 		DependencyInjectionService dependencyInjectionService = new DependencyInjectionService();
 		dependencyInjectionService.registerDependency(IUserRepository.class, new UserRepository(entityManagerFactory.createEntityManager()));
 		IDispatcher iDispatcher = new DispatcherService(dependencyInjectionService, GameController.class, AuthenticationController.class, UserApiController.class);
-		statelessConnectionServer = new StatelessConnectionServer(new ClientConnectionHandlerService(iDispatcher));
-		gameConnectionServer = new GameConnectionServer(iDispatcher);
+		statelessConnectionServer = new StatelessConnectionServer(new ClientConnectionHandlerService(iDispatcher), Integer.parseInt(serverPropertyFileService.getProperty("serverPort").toString()));
+		gameConnectionServer = new GameConnectionServer(iDispatcher, Integer.parseInt(serverPropertyFileService.getProperty("gameServerPort").toString()));
 	}
 	
 	public static void main(String args[]) {

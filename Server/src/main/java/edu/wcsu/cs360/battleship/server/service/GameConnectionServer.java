@@ -17,17 +17,20 @@ public class GameConnectionServer extends Thread implements IConnectionServer {
 	private final int MAX_CLIENTS = 2;
 	private Log log = LogFactory.getLog(this.getClass());
 	private ServerSocketFactory serverSocketFactory;
+	private int port;
 	private IDispatcher iDispatcher;
 	
 	private GameConnectionServer() {
-		
+		port = 8010;
 	}
 	
 	private GameConnectionServer(ServerSocketFactory serverSocketFactory) {
+		this();
 		this.serverSocketFactory = serverSocketFactory;
 	}
 	
 	public GameConnectionServer(ServerSocketFactory serverSocketFactory, IDispatcher iDispatcher) {
+		this();
 		this.serverSocketFactory = serverSocketFactory;
 		this.iDispatcher = iDispatcher;
 	}
@@ -35,6 +38,12 @@ public class GameConnectionServer extends Thread implements IConnectionServer {
 	public GameConnectionServer(IDispatcher iDispatcher) {
 		this(ServerSocketFactory.getDefault());
 		this.iDispatcher = iDispatcher;
+	}
+	
+	public GameConnectionServer(IDispatcher iDispatcher, int port) {
+		this(ServerSocketFactory.getDefault());
+		this.iDispatcher = iDispatcher;
+		this.port = port;
 	}
 	
 	/**
