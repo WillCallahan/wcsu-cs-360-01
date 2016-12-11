@@ -130,17 +130,26 @@ public class BoardController implements Initializable {
 	 */
 	public void onOpponentPaneClicked(MouseEvent mouseEvent) throws IOException {
 		if (gameStarted) {
-			//FIXME This does not handle more than two players
 			Player opponent = PlayerUtility.getPlayerListByNotId(game.getPlayerList(), applicationSession.getUser().getUserId()).get(0);
-			opponent.getBoard().hitLocation(
+			if (opponent.getBoard().isMissOrHitLocation(
 					battleshipGameBoardDrawService.getOpponentBattleshipBoardDrawService().getHorizontalGridLocationFromX((int) mouseEvent.getX()),
 					battleshipGameBoardDrawService.getOpponentBattleshipBoardDrawService().getVerticalGridLocationFromY((int) mouseEvent.getY())
-			);
-			Request<Game> gameRequest = new Request<>();
-			gameRequest.setMethod(RequestMethod.POST);
-			gameRequest.setBody(game);
-			gameRequest.setTarget("gameController.makeMove");
-			gameConnectionHandlerService.send(gameRequest);
+			)) {
+				//Player has already made a move at this location
+				AlertUtility.alert("Please select a location that you have not made a move in!", Alert.AlertType.WARNING);
+			} else {
+				//FIXME This does not handle more than two players
+				
+				opponent.getBoard().hitLocation(
+						battleshipGameBoardDrawService.getOpponentBattleshipBoardDrawService().getHorizontalGridLocationFromX((int) mouseEvent.getX()),
+						battleshipGameBoardDrawService.getOpponentBattleshipBoardDrawService().getVerticalGridLocationFromY((int) mouseEvent.getY())
+				);
+				Request<Game> gameRequest = new Request<>();
+				gameRequest.setMethod(RequestMethod.POST);
+				gameRequest.setBody(game);
+				gameRequest.setTarget("gameController.makeMove");
+				gameConnectionHandlerService.send(gameRequest);
+			}
 		}
 	}
 	

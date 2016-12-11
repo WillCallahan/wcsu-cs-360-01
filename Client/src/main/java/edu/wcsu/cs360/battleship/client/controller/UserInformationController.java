@@ -8,10 +8,7 @@ import edu.wcsu.cs360.battleship.common.repository.IUserFutureRepository;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -69,7 +66,7 @@ public class UserInformationController implements Initializable {
 	
 	private boolean validateForm() {
 		boolean valid = true;
-		if (TextInputValidationUtility.hasTextOrApplyCss(usernameTextField, passwordPasswordField, firstNameTextField).size() != 0)
+		if (TextInputValidationUtility.hasTextOrApplyCss(passwordPasswordField, firstNameTextField).size() != 0)
 			valid = false;
 		if (!TextInputValidationUtility.hasEmailAddressOrApplyCss(emailTextField))
 			valid = false;
@@ -79,7 +76,7 @@ public class UserInformationController implements Initializable {
 	@SuppressWarnings("Duplicates")
 	private User getUserFromForm() {
 		User user = new User();
-		user.setUsername(usernameTextField.getText());
+		user.setUsername(usernameLabel.getText());
 		user.setPassword(passwordPasswordField.getText());
 		user.setFirstName(firstNameTextField.getText());
 		user.setMiddleName(middleNameTextField.getText());
@@ -89,7 +86,7 @@ public class UserInformationController implements Initializable {
 	}
 	
 	private void serUserInForm(User user) {
-		usernameTextField.setText(user.getUsername());
+		usernameLabel.setText(user.getUsername());
 		passwordPasswordField.setText(user.getPassword());
 		firstNameTextField.setText(user.getFirstName());
 		middleNameTextField.setText(user.getMiddleName());
@@ -113,7 +110,7 @@ public class UserInformationController implements Initializable {
 	@FXML
 	private Button closeButton;
 	@FXML
-	private TextField usernameTextField;
+	private Label usernameLabel;
 	@FXML
 	private TextField firstNameTextField;
 	@FXML

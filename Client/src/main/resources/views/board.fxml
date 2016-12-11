@@ -6,7 +6,6 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.FlowPane?>
@@ -18,9 +17,7 @@
 <AnchorPane maxHeight="Infinity" minHeight="450" minWidth="600" prefHeight="450" prefWidth="1019.0" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.wcsu.cs360.battleship.client.controller.BoardController">
 	<MenuBar maxHeight="25.0" prefHeight="25.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 		<Menu mnemonicParsing="false" text="File">
-			<MenuItem mnemonicParsing="false" text="Logout" />
-			<SeparatorMenuItem mnemonicParsing="false" />
-			<MenuItem mnemonicParsing="false" text="Close" />
+			<MenuItem mnemonicParsing="false" onAction="#onQuitButtonClick" text="Close" />
 		</Menu>
 		<Menu mnemonicParsing="false" text="Edit">
 			<MenuItem mnemonicParsing="false" onAction="#onUserInfoMenuItemClick" text="User Info" />

@@ -1,12 +1,13 @@
 package edu.wcsu.cs360.battleship.client.controller;
 
-import edu.wcsu.cs360.battleship.common.repository.UserFutureRepository;
 import edu.wcsu.cs360.battleship.client.utility.general.ViewUtility;
 import edu.wcsu.cs360.battleship.client.utility.notification.AlertUtility;
+import edu.wcsu.cs360.battleship.client.view.AboutView;
 import edu.wcsu.cs360.battleship.client.view.BoardView;
 import edu.wcsu.cs360.battleship.client.view.CreateAccountView;
 import edu.wcsu.cs360.battleship.common.domain.entity.User;
 import edu.wcsu.cs360.battleship.common.domain.session.ApplicationSession;
+import edu.wcsu.cs360.battleship.common.repository.UserFutureRepository;
 import edu.wcsu.cs360.battleship.common.service.serialize.ObjectMapperClassCastService;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -48,14 +49,31 @@ public class LoginController implements Initializable {
 		log.info("Initializing " + getClass());
 	}
 	
-	public void onHelpMenuAboutClick(ActionEvent actionEvent) throws InterruptedException {
-		
+	/**
+	 * Shows the {@link AboutView}
+	 *
+	 * @param actionEvent Action Event
+	 */
+	public void onHelpMenuAboutClick(ActionEvent actionEvent) {
+		ViewUtility.onTop(new AboutView());
 	}
 	
+	/**
+	 * Quits the application
+	 *
+	 * @param actionEvent Action Event
+	 */
 	public void onFileMenuCloseClick(ActionEvent actionEvent) {
 		((Stage) (menuBar).getScene().getWindow()).close();
 	}
 	
+	/**
+	 * Attempts to lo in the specified user. If the user provided valid credentials, the the user is brought to the
+	 * {@link BoardView}. Otherwise, the user is prompted that they enter invalid credentials and they are required
+	 * to attempt to log in again.
+	 *
+	 * @param actionEvent Action Event
+	 */
 	public void onLoginButtonClick(ActionEvent actionEvent) {
 		DeferredManager deferredManager = new DefaultDeferredManager();
 		loginButton.setDisable(true);
@@ -63,9 +81,9 @@ public class LoginController implements Initializable {
 				.done(result -> {
 					if (AlertUtility.alertIfHasError(result))
 						return;
-					if (result.getBody() == null) {
+					if (result.getBody() == null)
 						AlertUtility.alert("Invalid Credentials", Alert.AlertType.WARNING);
-					} else {
+					else {
 						Platform.runLater(() -> {
 							ObjectMapperClassCastService objectMapperClassCastService = new ObjectMapperClassCastService();
 							applicationSession.setUser(objectMapperClassCastService.cast(result.getBody(), User.class));

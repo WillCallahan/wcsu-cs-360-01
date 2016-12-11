@@ -44,18 +44,18 @@
 						<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
 					</rowConstraints>
 					<children>
-						<Label text="Username*" GridPane.rowIndex="0" />
+						<Label text="Username" GridPane.rowIndex="0" />
 						<Label text="Password*" GridPane.rowIndex="1" />
 						<Label text="First Name*" GridPane.rowIndex="2" />
 						<Label text="Middle Name" GridPane.rowIndex="3" />
 						<Label text="Last Name" GridPane.rowIndex="4" />
 						<Label text="Email*" GridPane.rowIndex="5" />
-						<TextField fx:id="usernameTextField" GridPane.columnIndex="1" GridPane.rowIndex="0" />
 						<PasswordField fx:id="passwordPasswordField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 						<TextField fx:id="firstNameTextField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
 						<TextField fx:id="middleNameTextField" GridPane.columnIndex="1" GridPane.rowIndex="3" />
 						<TextField fx:id="lastNameTextField" GridPane.columnIndex="1" GridPane.rowIndex="4" />
 						<TextField fx:id="emailTextField" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                  <Label fx:id="usernameLabel" GridPane.columnIndex="1" />
 					</children>
 				</GridPane>
 				<Pane maxHeight="55.0" prefHeight="39.0" prefWidth="365.0" GridPane.rowIndex="1">

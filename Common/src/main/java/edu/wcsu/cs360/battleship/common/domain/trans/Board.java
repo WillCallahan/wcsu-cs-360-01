@@ -91,6 +91,10 @@ public class Board {
 		return false;
 	}
 	
+	public boolean isMissOrHitLocation(int x, int y) {
+		return board[x][y] == 1;
+	}
+	
 	public boolean isBadTable() {
 		return badTable;
 	}
