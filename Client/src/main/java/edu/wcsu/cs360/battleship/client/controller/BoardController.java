@@ -3,20 +3,22 @@ package edu.wcsu.cs360.battleship.client.controller;
 import edu.wcsu.cs360.battleship.client.service.canvas.BattleshipBoardDrawService;
 import edu.wcsu.cs360.battleship.client.service.general.BattleshipGameBoardDrawService;
 import edu.wcsu.cs360.battleship.client.service.io.GameConnectionHandlerService;
-import edu.wcsu.cs360.battleship.client.service.io.ServerConnectionHandlerService;
 import edu.wcsu.cs360.battleship.client.utility.general.ViewUtility;
+import edu.wcsu.cs360.battleship.client.utility.notification.AlertUtility;
 import edu.wcsu.cs360.battleship.client.view.AboutView;
 import edu.wcsu.cs360.battleship.client.view.UserInformationView;
 import edu.wcsu.cs360.battleship.common.domain.enumeration.RequestMethod;
-import edu.wcsu.cs360.battleship.common.domain.singleton.ApplicationSession;
+import edu.wcsu.cs360.battleship.common.domain.session.ApplicationSession;
 import edu.wcsu.cs360.battleship.common.domain.socket.Request;
 import edu.wcsu.cs360.battleship.common.domain.socket.Response;
 import edu.wcsu.cs360.battleship.common.domain.trans.*;
 import edu.wcsu.cs360.battleship.common.service.serialize.ObjectMapperClassCastService;
+import edu.wcsu.cs360.battleship.common.utility.PlayerUtility;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
@@ -31,6 +33,9 @@ import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 
+/**
+ * Controller for the {@link edu.wcsu.cs360.battleship.client.view.BoardView}
+ */
 public class BoardController implements Initializable {
 	
 	private Log log = LogFactory.getLog(this.getClass());
@@ -41,8 +46,6 @@ public class BoardController implements Initializable {
 	private GameConnectionHandlerService gameConnectionHandlerService;
 	@Inject
 	private ApplicationSession applicationSession;
-	@Inject
-	private ServerConnectionHandlerService serverConnectionHandlerService;
 	
 	public BoardController() throws IOException {
 		gameConnectionHandlerService = null;
@@ -55,7 +58,7 @@ public class BoardController implements Initializable {
 		gameConnectionHandlerService.initialize();
 		gameConnectionHandlerService.listen(this::handleResponseFromServer);
 		
-		Player player = game.getPlayerById(applicationSession.getUser().getUserId());
+		Player player = PlayerUtility.getPlayerById(game.getPlayerList(), applicationSession.getUser().getUserId());
 		player.setBoard(new Board(new Tuple(battleshipGameBoardDrawService.getPlayerBattleshipBoardDrawService().getNumberOfHorizontalBoxes(), battleshipGameBoardDrawService.getPlayerBattleshipBoardDrawService().getNumberOfVerticalBoxes())));
 		setBoard(battleshipGameBoardDrawService.getPlayerBattleshipBoardDrawService(), player.getBoard());
 		
@@ -68,15 +71,30 @@ public class BoardController implements Initializable {
 		gameStarted = true;
 	}
 	
+	/**
+	 * Quit the application
+	 *
+	 * @param actionEvent Action Event
+	 */
 	public void onQuitButtonClick(ActionEvent actionEvent) {
 		Stage stage = (Stage) quitButton.getScene().getWindow();
 		stage.close();
 	}
 	
+	/**
+	 * Shows the {@link UserInformationView}
+	 *
+	 * @param actionEvent Action Event
+	 */
 	public void onUserInfoMenuItemClick(ActionEvent actionEvent) {
 		ViewUtility.onTop(new UserInformationView());
 	}
 	
+	/**
+	 * Shows the {@link AboutView}
+	 *
+	 * @param actionEvent Action Event
+	 */
 	public void onAboutMenuItemClick(ActionEvent actionEvent) {
 		ViewUtility.onTop(new AboutView());
 	}
@@ -85,6 +103,12 @@ public class BoardController implements Initializable {
 	
 	//region Drag Event Handlers
 	
+	/**
+	 * If the game has not yet started, then this allows a ship to be placed on the player's board in the
+	 * location that the player clicked.
+	 *
+	 * @param mouseEvent Action Event
+	 */
 	public void onPlayerPaneClicked(MouseEvent mouseEvent) {
 		if (!gameStarted) {
 			battleshipGameBoardDrawService.togglePlayerShip((int) mouseEvent.getX(), (int) mouseEvent.getY());
@@ -98,10 +122,16 @@ public class BoardController implements Initializable {
 		}
 	}
 	
+	/**
+	 * If the game has started and it is the player's turn, then a move will be made on the player's board
+	 *
+	 * @param mouseEvent Action Event
+	 * @throws IOException If a socket connection error occurs
+	 */
 	public void onOpponentPaneClicked(MouseEvent mouseEvent) throws IOException {
 		if (gameStarted) {
 			//FIXME This does not handle more than two players
-			Player opponent = game.getOpponentList(applicationSession.getUser().getUserId()).get(0);
+			Player opponent = PlayerUtility.getPlayerListByNotId(game.getPlayerList(), applicationSession.getUser().getUserId()).get(0);
 			opponent.getBoard().hitLocation(
 					battleshipGameBoardDrawService.getOpponentBattleshipBoardDrawService().getHorizontalGridLocationFromX((int) mouseEvent.getX()),
 					battleshipGameBoardDrawService.getOpponentBattleshipBoardDrawService().getVerticalGridLocationFromY((int) mouseEvent.getY())
@@ -116,13 +146,30 @@ public class BoardController implements Initializable {
 	
 	//endregion
 	
+	/**
+	 * Called every time that the server sends out responses to the client. The {@link Response#body} contains a
+	 * {@link Game} object.
+	 *
+	 * @param response Response from the server
+	 */
 	private void handleResponseFromServer(Response response) {
 		Platform.runLater(() -> {
 			ObjectMapperClassCastService objectMapperClassCastService = new ObjectMapperClassCastService();
 			this.game = objectMapperClassCastService.cast(response.getBody(), Game.class);
 			updateGameBoard(game);
-			//TODO Check if there is a winner
-			if (game.getPlayerList().get(game.getCurrentPlayerTurnIndex()).getId() == applicationSession.getUser().getUserId()) { //Its my turn
+			Player winner = PlayerUtility.getWinner(game.getPlayerList());
+			if (winner != null) {
+				notificationLabel.setText("Game over!");
+				if (winner.getId() == applicationSession.getUser().getUserId())
+					AlertUtility.alert("Game over; you lost!", Alert.AlertType.INFORMATION);
+				else
+					AlertUtility.alert("Game over; you won!", Alert.AlertType.INFORMATION);
+				return;
+			}
+			if (game.getPlayerList().size() == 1) {
+				notificationLabel.setText("Waiting for other players...");
+				opponentPane.setDisable(true);
+			} else if (game.getPlayerList().get(game.getCurrentPlayerTurnIndex()).getId() == applicationSession.getUser().getUserId()) { //Its my turn
 				notificationLabel.setText("It's you turn!");
 				opponentPane.setDisable(false);
 			} else {
@@ -134,9 +181,9 @@ public class BoardController implements Initializable {
 	
 	private void updateGameBoard(Game game) {
 		this.game.setPlayerList(game.getPlayerList());
-		Player player = game.getPlayerById(applicationSession.getUser().getUserId());
+		Player player = PlayerUtility.getPlayerById(game.getPlayerList(), applicationSession.getUser().getUserId());
 		Player opponent = null;
-		List<Player> opponentList = game.getOpponentList(applicationSession.getUser().getUserId());
+		List<Player> opponentList = PlayerUtility.getPlayerListByNotId(game.getPlayerList(), applicationSession.getUser().getUserId());
 		if (opponentList.size() > 0)
 			opponent = opponentList.get(0);
 		if (player != null)

@@ -27,6 +27,8 @@ public class UserRepositoryTest {
 
 	{
 		user = new User();
+		user.setPassword("password");
+		user.setUsername("willCallahan1994");
 		user.setFirstName("William");
 		user.setMiddleName("Gregory");
 		user.setLastName("Callahan");
@@ -50,18 +52,21 @@ public class UserRepositoryTest {
 		user = iUserRepository.save(user);
 		User newUser = iUserRepository.findOne(user.getUserId());
 		Assert.assertNotNull(newUser);
+		iUserRepository.delete(user);
 	}
 
 	@Test
 	public void findAll() throws Exception {
+		user = iUserRepository.save(user);
 		Iterable<User> userIterable = iUserRepository.findAll();
 		Assert.assertNotNull(userIterable);
+		iUserRepository.delete(user);
 	}
 
 	@Test
 	public void count() throws Exception {
 		Long count = iUserRepository.count();
-		Assert.assertTrue(count == 0L);
+		Assert.assertTrue(count != 0L);
 	}
 
 	@Test
@@ -69,6 +74,7 @@ public class UserRepositoryTest {
 		User newUser = iUserRepository.save(user);
 		user.setUserId(newUser.getUserId());
 		Assert.assertTrue(user.equals(newUser));
+		iUserRepository.delete(user);
 	}
 
 	@Test
@@ -77,6 +83,7 @@ public class UserRepositoryTest {
 		userList.add(user);
 		Iterable<User> userIterable = iUserRepository.saveAll(userList);
 		Assert.assertNotNull(userIterable);
+		iUserRepository.delete(user);
 	}
 
 	@Test
